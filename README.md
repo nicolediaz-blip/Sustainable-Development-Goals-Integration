@@ -3,896 +3,351 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MATATAG Curriculum SDG Lesson Integrator</title>
-    <style>
-        :root {
-            --primary: #1e4620; /* Deep Filipiniana / Lasallian Green */
-            --primary-light: #2d6a31;
-            --accent: #d4a373; /* Warm earthy gold accent */
-            --bg: #f4f6f0; /* Soft canvas tone */
-            --surface: #ffffff;
-            --text: #2b2d42;
-            --muted: #6c757d;
-            --border: #e0e4d9;
-            --radius: 12px;
-            --shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            padding: 0;
-        }
-
-        header {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            padding: 2.5rem 2rem;
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            position: relative;
-        }
-
-        header h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.5px;
-        }
-
-        header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            max-width: 700px;
-            margin: 0 auto;
-            font-weight: 300;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 2.5rem auto;
-            padding: 0 1.5rem;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 2.5rem;
-        }
-
-        @media (min-width: 900px) {
-            .container {
-                grid-template-columns: 350px 1fr;
-            }
-        }
-
-        .card {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 2rem;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-            height: fit-content;
-        }
-
-        .planner-form h2 {
-            font-size: 1.4rem;
-            margin-bottom: 1.5rem;
-            color: var(--primary);
-            border-bottom: 2px solid var(--border);
-            padding-bottom: 0.5rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.25rem;
-            position: relative;
-        }
-
-        label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-            color: var(--text);
-        }
-
-        select, input[type="text"] {
-            width: 100%;
-            padding: 0.85rem 1rem;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 0.95rem;
-            background-color: #fafbfc;
-            color: var(--text);
-            transition: var(--transition);
-        }
-
-        select:focus, input[type="text"]:focus {
-            outline: none;
-            border-color: var(--primary);
-            background-color: var(--surface);
-            box-shadow: 0 0 0 3px rgba(30, 70, 32, 0.15);
-        }
-
-        .suggestions-box {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 10;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            display: none;
-        }
-
-        .suggestion-item {
-            padding: 0.75rem 1rem;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: background 0.2s ease;
-        }
-
-        .suggestion-item:hover {
-            background-color: #f0f4f0;
-            color: var(--primary);
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            padding: 0.9rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            gap: 0.5rem;
-        }
-
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-light);
-            transform: translateY(-1px);
-        }
-
-        .btn-secondary {
-            background-color: #e2e8f0;
-            color: var(--text);
-            font-size: 0.9rem;
-            padding: 0.6rem 1.2rem;
-            width: auto;
-        }
-
-        .btn-secondary:hover {
-            background-color: #cbd5e1;
-        }
-
-        .actions-wrapper {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .output-panel {
-            min-height: 400px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .placeholder-view {
-            text-align: center;
-            margin: auto;
-            color: var(--muted);
-            padding: 2rem;
-        }
-
-        .placeholder-view svg {
-            width: 80px;
-            height: 80px;
-            fill: none;
-            stroke: var(--border);
-            stroke-width: 1.5;
-            margin-bottom: 1rem;
-        }
-
-        .lesson-template {
-            display: none;
-            animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .lesson-header {
-            border-bottom: 3px solid var(--primary);
-            padding-bottom: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .lesson-header h2 {
-            font-size: 1.8rem;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .meta-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            font-size: 0.95rem;
-            background: #f8f9f5;
-            padding: 1rem;
-            border-radius: 8px;
-            border-left: 4px solid var(--accent);
-        }
-
-        .meta-item strong {
-            color: var(--primary);
-            display: block;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .sdg-badge-container {
-            margin-top: 1rem;
-        }
-
-        .sdg-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            color: white;
-            font-weight: 600;
-            font-size: 0.85rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .section-block {
-            margin-bottom: 1.75rem;
-            background: #fff;
-            padding: 1.25rem;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            transition: var(--transition);
-        }
-
-        .section-block:hover {
-            border-color: #cbd5e1;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-        }
-
-        .section-title {
-            font-size: 1.1rem;
-            color: var(--primary);
-            margin-bottom: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 600;
-        }
-
-        .section-title span {
-            background: #e9ecef;
-            color: var(--primary);
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-        }
-
-        .editable-field {
-            outline: none;
-            padding: 0.25rem;
-            border-radius: 4px;
-            transition: background 0.2s;
-        }
-
-        .editable-field[contenteditable="true"]:focus {
-            background: #fffebb;
-            box-shadow: 0 0 0 2px var(--accent);
-        }
-
-        .nta-structure {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1rem;
-            margin-top: 0.5rem;
-        }
-
-        @media (min-width: 600px) {
-            .nta-structure {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        .nta-card {
-            padding: 1rem;
-            border-radius: 6px;
-            background: #fafafa;
-            border-top: 4px solid #cbd5e1;
-        }
-
-        .nta-card.notice { border-top-color: #3498db; }
-        .nta-card.think { border-top-color: #f39c12; }
-        .nta-card.act { border-top-color: #2ecc71; }
-
-        .nta-title {
-            font-weight: 700;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            margin-bottom: 0.25rem;
-            display: block;
-        }
-        .nta-card.notice .nta-title { color: #3498db; }
-        .nta-card.think .nta-title { color: #f39c12; }
-        .nta-card.act .nta-title { color: #2ecc71; }
-
-        footer {
-            text-align: center;
-            padding: 2rem;
-            color: var(--muted);
-            font-size: 0.85rem;
-            border-top: 1px solid var(--border);
-            margin-top: 4rem;
-            background: #fff;
-        }
-    </style>
+    <title>MATATAG Curriculum - SDG Integration Hub</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body>
+<body class="bg-gray-50 font-sans text-gray-800 antialiased">
 
-    <header>
-        <h1>SDG Lesson Integrator</h1>
-        <p>Transforming MATATAG Curriculum learning competencies into contextualized, real-world sustainable learning actions aligned with Lasallian environmental and societal stewardship values.</p>
+    <header class="bg-indigo-900 text-white shadow-md border-b-4 border-emerald-500">
+        <div class="max-w-7xl mx-auto px-4 py-5 flex flex-col md:flex-row justify-between items-center">
+            <div>
+                <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-emerald-400">MATATAG x SDG Integration</h1>
+                <p class="text-xs md:text-sm text-indigo-200 font-medium mt-1">Interactive Lesson Mapping Matrix • Grades 1 to 10</p>
+            </div>
+            <div class="mt-4 md:mt-0 flex items-center space-x-3">
+                <span class="bg-indigo-800 text-indigo-200 text-xs px-3 py-1.5 font-semibold rounded-md border border-indigo-700">DepEd Framework Plan</span>
+                <span class="bg-emerald-500 text-indigo-950 text-xs px-3 py-1.5 font-bold rounded-md shadow-xs">v2.0 Fully Loaded</span>
+            </div>
+        </div>
     </header>
 
-    <div class="container">
-        <div class="card planner-form">
-            <h2>Curriculum Parameters</h2>
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        
+        <div class="bg-gradient-to-r from-indigo-800 to-indigo-950 rounded-2xl shadow-lg p-6 md:p-8 text-white mb-8">
+            <div class="max-w-3xl">
+                <h2 class="text-xl md:text-2xl font-bold mb-3 text-emerald-300">Welcome to the Interactive Curriculum Builder</h2>
+                <p class="text-sm md:text-base text-indigo-100 leading-relaxed opacity-90">
+                    Grounded in the integration of the Sustainable Development Goals (SDGs), participants will explore how to design authentic and interdisciplinary learning experiences that foster critical thinking, collaboration, and global awareness.
+                </p>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-xs border border-gray-200 p-6 mb-8">
+            <h3 class="text-xs font-bold uppercase tracking-widest text-indigo-600 mb-4 flex items-center">
+                <span class="inline-block w-2 h-2 rounded-full bg-indigo-600 mr-2"></span> Select Matrix Filters
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase mb-2 tracking-wide">Select Learning Area</label>
+                    <select id="subjectSelect" onchange="populateGrades()" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:outline-none transition-all">
+                        <option value="science">🔬 Science</option>
+                        <option value="english">📝 English</option>
+                        <option value="math">🧮 Mathematics</option>
+                        <option value="filipino">🇵🇭 Filipino</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase mb-2 tracking-wide">Select Grade Level</label>
+                    <select id="gradeSelect" onchange="renderMatrixData()" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:outline-none transition-all">
+                        </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="px-6 py-4 bg-gray-50 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                <div>
+                    <h3 class="font-extrabold text-gray-800 text-sm uppercase tracking-wider">Lesson Integration Output Blueprint</h3>
+                    <p class="text-xs text-gray-500 mt-0.5">Dynamic integration results matched directly to MATATAG curriculum parameters.</p>
+                </div>
+                <div id="badgeContainer">
+                    </div>
+            </div>
             
-            <div class="form-group">
-                <label for="gradeLevel">Grade Level</label>
-                <select id="gradeLevel">
-                    <option value="">Select Grade Level</option>
-                    <option value="Grade 1">Grade 1</option>
-                    <option value="Grade 2">Grade 2</option>
-                    <option value="Grade 3">Grade 3</option>
-                    <option value="Grade 4">Grade 4</option>
-                    <option value="Grade 5">Grade 5</option>
-                    <option value="Grade 6">Grade 6</option>
-                    <option value="Grade 7">Grade 7</option>
-                    <option value="Grade 8">Grade 8</option>
-                    <option value="Grade 9">Grade 9</option>
-                    <option value="Grade 10">Grade 10</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="subject">Subject Area</label>
-                <select id="subject">
-                    <option value="">Select Subject</option>
-                    <option value="Science">Science</option>
-                    <option value="English">English</option>
-                    <option value="Math">Math</option>
-                    <option value="Filipino">Filipino</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="topicInput">Lesson Topic / Competency</label>
-                <input type="text" id="topicInput" placeholder="e.g., Waste Management, Fractions, Ecosystems..." autocomplete="off">
-                <div class="suggestions-box" id="suggestionsBox"></div>
-            </div>
-
-            <button class="btn btn-primary" id="generateBtn">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-                Generate SDG Plan
-            </button>
-        </div>
-
-        <div class="card output-panel">
-            <div class="placeholder-view" id="placeholderView">
-                <svg viewBox="0 0 24 24">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                    <polyline points="10 9 9 9 8 9"></polyline>
-                </svg>
-                <h3>No Blueprint Generated Yet</h3>
-                <p>Provide a Grade Level, Subject, and Curriculum Topic on the left to synthesize an adaptive, SDG-aligned mini-lesson structure.</p>
-            </div>
-
-            <div class="lesson-template" id="lessonTemplate">
-                <div class="lesson-header">
-                    <h2>📘 SDG LESSON PLAN TEMPLATE</h2>
-                    <div class="meta-grid">
-                        <div class="meta-item"><strong>Grade Level</strong><span id="outGrade"></span></div>
-                        <div class="meta-item"><strong>Subject Area</strong><span id="outSubject"></span></div>
-                        <div class="meta-item"><strong>Topic Baseline</strong><span id="outTopic"></span></div>
-                    </div>
-                    <div class="sdg-badge-container">
-                        <div class="sdg-badge" id="sdgBadge"></div>
-                    </div>
-                </div>
-
-                <div class="section-block">
-                    <div class="section-title"><span>1</span> Learning Goal</div>
-                    <div class="editable-field" id="outGoal"></div>
-                </div>
-
-                <div class="section-block">
-                    <div class="section-title"><span>2</span> SDG Connection Context</div>
-                    <div class="editable-field" id="outConnection"></div>
-                </div>
-
-                <div class="section-block">
-                    <div class="section-title"><span>3</span> Real-World Challenge / Problem Frame</div>
-                    <div class="editable-field" id="outProblem"></div>
-                </div>
-
-                <div class="section-block">
-                    <div class="section-title"><span>4</span> Interactive Learning Activity</div>
-                    <div class="editable-field" id="outActivity"></div>
-                </div>
-
-                <div class="section-block">
-                    <div class="section-title"><span>5</span> Local Action Task (1-Week Doable)</div>
-                    <div class="nta-structure">
-                        <div class="nta-card notice">
-                            <span class="nta-title">Notice</span>
-                            <div class="editable-field" id="outNotice"></div>
-                        </div>
-                        <div class="nta-card think">
-                            <span class="nta-title">Think</span>
-                            <div class="editable-field" id="outThink"></div>
-                        </div>
-                        <div class="nta-card act">
-                            <span class="nta-title">Act</span>
-                            <div class="editable-field" id="outAct"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="section-block">
-                    <div class="section-title"><span>6</span> Concrete Student Output Artifact</div>
-                    <div class="editable-field" id="outOutput"></div>
-                </div>
-
-                <div class="section-block">
-                    <div class="section-title"><span>7</span> Integrative Reflection Question</div>
-                    <div class="editable-field" id="outReflection"></div>
-                </div>
-
-                <div class="actions-wrapper">
-                    <button class="btn btn-secondary" id="editBtn">✍️ Edit Document</button>
-                    <button class="btn btn-secondary" id="printBtn">🖨️ Download / Print PDF</button>
-                </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse min-w-[900px]">
+                    <thead>
+                        <tr class="bg-indigo-50/50 border-b border-gray-200 text-xs font-bold uppercase tracking-wider text-indigo-900">
+                            <th class="p-4 w-20">Quarter</th>
+                            <th class="p-4 w-1/4">Topic & Learning Goal</th>
+                            <th class="p-4 w-1/5">SDG Core Target</th>
+                            <th class="p-4 w-1/4">Real-World Problem & Activity</th>
+                            <th class="p-4 w-1/4">Notice-Think-Act Task Framework</th>
+                            <th class="p-4 w-1/5">Assessment Output & Reflection</th>
+                        </tr>
+                    </thead>
+                    <tbody id="matrixGridBody" class="text-sm divide-y divide-gray-200 bg-white">
+                        </tbody>
+                </table>
             </div>
         </div>
-    </div>
+    </main>
 
-    <footer>
-        MATATAG K to 10 Curriculum - SDG Instructional Alignment Engine • Formulated for Filipino Modern Educators
+    <footer class="bg-gray-100 border-t border-gray-200 text-center py-6 mt-12">
+        <p class="text-xs font-medium text-gray-500">MATATAG Curriculum Sustainable Development Goals Integration Portal</p>
     </footer>
 
     <script>
-        // Comprehensive embedded MATATAG Knowledge Base parsed from structured source materials [cite: 98, 100, 102, 104, 106, 108, 110, 112, 114, 116, 118, 119, 121, 122, 123, 124, 125, 126, 131, 133, 136, 139, 143, 146, 148, 151, 155, 158, 161, 163, 167, 170, 172, 174, 178, 181, 183, 185, 188]
-        const curriculumDataset = [
-            // --- SCIENCE GRADES 1-10 ---
-            { grade: "Grade 1", subject: "Science", topic: "Living and Non-Living Things", goal: "Identify characteristics of living and non-living things.", sdg: "SDG 15: Life on Land", problem: "Living things are often neglected or harmed in the environment.", activity: "Nature walk and sorting activity.", notice: "Observe living things in the community.", think: "Discuss why plants and animals need care.", act: "Care for one plant or pet for one week.", output: "Observation journal or collage", reflection: "How can caring for living things help the environment?" },
-            { grade: "Grade 1", subject: "Science", topic: "Parts of Plants and Animals", goal: "Describe parts and functions of plants and animals.", sdg: "SDG 15: Life on Land", problem: "Plants and animals are often damaged because people do not understand their importance.", activity: "Plant observation and mini gardening.", notice: "Observe plants and animals nearby.", think: "Analyze how they help humans.", act: "Grow a small plant at home.", output: "Plant growth diary", reflection: "Why is protecting plants and animals important?" },
-            { grade: "Grade 1", subject: "Science", topic: "Weather and Seasons", goal: "Explain basic weather patterns and seasons.", sdg: "SDG 13: Climate Action", problem: "Communities experience strong weather disturbances and disasters.", activity: "Weather charting and weather diary.", notice: "Observe daily weather changes.", think: "Discuss how weather affects people.", act: "Prepare a simple family weather safety checklist.", output: "Weather journal and checklist", reflection: "How can weather awareness keep people safe?" },
-            { grade: "Grade 1", subject: "Science", topic: "Caring for the Environment", goal: "Demonstrate proper waste management practices.", sdg: "SDG 12: Responsible Consumption and Production", problem: "Littering and improper waste disposal pollute communities.", activity: "Recycling craft and segregation game.", notice: "Observe waste problems in school/home.", think: "Discuss effects of littering.", act: "Practice waste segregation for one week.", output: "Recycling craft or poster", reflection: "What small actions can help keep the environment clean?" },
-            
-            { grade: "Grade 2", subject: "Science", topic: "Human Body Parts and Health", goal: "Explain healthy habits and body care.", sdg: "SDG 3: Good Health and Well-Being", problem: "Poor hygiene and unhealthy habits can cause sickness.", activity: "Hygiene role play and healthy habits chart.", notice: "Observe daily health habits.", think: "Identify healthy and unhealthy practices.", act: "Follow a healthy habit routine for one week.", output: "Health tracker", reflection: "Which healthy habit helped you the most?" },
-            { grade: "Grade 2", subject: "Science", topic: "Animals and Their Habitats", goal: "Identify animal habitats and their importance.", sdg: "SDG 15: Life on Land", problem: "Animal habitats are destroyed by pollution and deforestation.", activity: "Habitat diorama and observation activity.", notice: "Observe animals in the environment.", think: "Discuss habitat destruction.", act: "Create awareness signs about protecting animals.", output: "Diorama or awareness poster", reflection: "Why should humans protect animal habitats?" },
-            { grade: "Grade 2", subject: "Science", topic: "Properties of Materials", goal: "Classify materials based on properties.", sdg: "SDG 12: Responsible Consumption and Production", problem: "Excessive waste harms the environment.", activity: "Recycling challenge and experiments.", notice: "Observe household waste.", think: "Identify reusable materials.", act: "Reuse materials to create useful objects.", output: "Recycled product", reflection: "How can reusing materials reduce waste?" },
-            { grade: "Grade 2", subject: "Science", topic: "Sun, Moon, and Stars", goal: "Describe the importance of celestial bodies.", sdg: "SDG 4: Quality Education", problem: "Many students lack awareness about space science.", activity: "Sky observation journal and moon phase chart.", notice: "Observe the sky nightly.", think: "Discuss how celestial bodies affect life.", act: "Share space facts with classmates or family.", output: "Space journal", reflection: "What did you learn about the sky that amazed you?" },
-
-            { grade: "Grade 3", subject: "Science", topic: "Plants and Their Life Cycle", goal: "Explain stages of plant growth.", sdg: "SDG 15: Life on Land", problem: "Lack of plants contributes to environmental problems.", activity: "Seed planting and growth journal.", notice: "Observe plants around the community.", think: "Discuss why plants matter.", act: "Plant and care for seeds for one week.", output: "Growth journal", reflection: "How do plants help humans and nature?" },
-            { grade: "Grade 3", subject: "Science", topic: "States of Matter", goal: "Identify solid, liquid, and gas and their properties.", sdg: "SDG 6: Clean Water and Sanitation", problem: "Water pollution affects communities.", activity: "Ice melting experiment and water observation.", notice: "Observe water use at home.", think: "Identify ways water is wasted.", act: "Practice water-saving habits for one week.", output: "Water conservation checklist", reflection: "Why should we conserve clean water?" },
-            { grade: "Grade 3", subject: "Science", topic: "Force and Motion", goal: "Explain how force affects movement.", sdg: "SDG 9: Industry, Innovation and Infrastructure", problem: "Unsafe transportation and inefficient machines affect daily life.", activity: "Ramp experiment and toy car investigation.", notice: "Observe moving objects around you.", think: "Explain how force works.", act: "Design a simple moving toy from recycled materials.", output: "Prototype toy", reflection: "How does force help improve daily activities?" },
-            { grade: "Grade 3", subject: "Science", topic: "Earth and Natural Resources", goal: "Identify natural resources and ways to conserve them.", sdg: "SDG 13: Climate Action", problem: "Natural resources are overused and polluted.", activity: "Recycling campaign and poster making.", notice: "Observe resources used daily.", think: "Discuss effects of overconsumption.", act: "Reduce one wasteful habit for one week.", output: "Awareness poster", reflection: "How can children help conserve resources?" },
-
-            { grade: "Grade 4", subject: "Science", topic: "Digestive and Respiratory System", goal: "Explain how body systems work together.", sdg: "SDG 3: Good Health and Well-Being", problem: "Poor nutrition and unhealthy lifestyles affect health.", activity: "Healthy meal planning and lung model making.", notice: "Observe eating and exercise habits.", think: "Analyze effects on health.", act: "Practice healthy eating for one week.", output: "Health campaign poster", reflection: "How can healthy habits improve your body systems?" },
-            { grade: "Grade 4", subject: "Science", topic: "Ecosystems and Food Chains", goal: "Explain relationships among organisms.", sdg: "SDG 15: Life on Land", problem: "Human activities damage ecosystems.", activity: "Food web creation and ecosystem mapping.", notice: "Observe living organisms nearby.", think: "Discuss food chain balance.", act: "Participate in a mini clean-up drive.", output: "Food web diagram", reflection: "Why is every organism important in an ecosystem?" },
-            { grade: "Grade 4", subject: "Science", topic: "Heat and Energy", goal: "Describe sources and uses of energy.", sdg: "SDG 7: Affordable and Clean Energy", problem: "Excessive energy use harms the environment.", activity: "Solar cooker demo and heat experiments.", notice: "Observe electricity use at home.", think: "Identify ways energy is wasted.", act: "Save electricity for one week.", output: "Energy-saving checklist", reflection: "How can conserving energy help the planet?" },
-            { grade: "Grade 4", subject: "Science", topic: "Weather Disturbances", goal: "Identify types of weather disturbances and safety measures.", sdg: "SDG 13: Climate Action", problem: "Typhoons and disasters affect communities.", activity: "Disaster preparedness planning and simulations.", notice: "Observe disaster risks in the community.", think: "Discuss preparedness strategies.", act: "Prepare an emergency kit with family.", output: "Preparedness plan", reflection: "Why is disaster preparedness important?" },
-
-            { grade: "Grade 5", subject: "Science", topic: "Reproductive System", goal: "Understand body changes and health awareness.", sdg: "SDG 3: Good Health and Well-Being", problem: "Lack of health awareness may lead to unhealthy practices.", activity: "Health discussion and awareness poster.", notice: "Observe healthy and respectful behaviors.", think: "Discuss body care and respect.", act: "Practice one healthy habit consistently for one week.", output: "Reflection journal", reflection: "Why is respecting our body important?" },
-            { grade: "Grade 5", subject: "Science", topic: "Matter and Its Changes", goal: "Explain physical and chemical changes in matter.", sdg: "SDG 12: Responsible Consumption and Production", problem: "Improper waste disposal increases pollution.", activity: "Recycling experiment and waste audit.", notice: "Observe waste materials at home.", think: "Analyze waste management practices.", act: "Reduce single-use plastic for one week.", output: "Waste audit report", reflection: "How can reducing waste help communities?" },
-            { grade: "Grade 5", subject: "Science", topic: "Soil Erosion and Conservation", goal: "Describe causes and effects of soil erosion.", sdg: "SDG 15: Life on Land", problem: "Soil erosion damages farms and communities.", activity: "Soil investigation and tree planting.", notice: "Observe areas with soil damage.", think: "Identify causes of erosion.", act: "Plant vegetation or promote soil protection.", output: "Conservation poster", reflection: "How can people protect the land?" },
-            { grade: "Grade 5", subject: "Science", topic: "Electricity and Circuits", goal: "Build simple electrical circuits.", sdg: "SDG 7: Affordable and Clean Energy", problem: "Energy waste increases environmental problems.", activity: "Circuit building and energy-saving campaign.", notice: "Observe electrical use at home.", think: "Analyze unnecessary energy consumption.", act: "Practice turning off unused appliances.", output: "Circuit model", reflection: "How can responsible electricity use help society?" },
-
-            { grade: "Grade 6", subject: "Science", topic: "Nervous System", goal: "Explain functions of the nervous system and mental wellness.", sdg: "SDG 3: Good Health and Well-Being", problem: "Stress and unhealthy habits affect wellness.", activity: "Stress management activity and infographic making.", notice: "Observe stress triggers.", think: "Discuss effects of stress on the body.", act: "Practice stress management techniques for one week.", output: "Wellness journal", reflection: "How can managing stress improve daily life?" },
-            { grade: "Grade 6", subject: "Science", topic: "Mixtures and Solutions", goal: "Differentiate mixtures and solutions.", sdg: "SDG 6: Clean Water and Sanitation", problem: "Water contamination affects health.", activity: "Water filtration experiment and investigation.", notice: "Observe water use and cleanliness.", think: "Discuss water pollution causes.", act: "Promote water conservation at home.", output: "Filtration model", reflection: "Why is clean water essential?" },
-            { grade: "Grade 6", subject: "Science", topic: "Earthquakes and Volcanoes", goal: "Explain causes and effects of natural hazards.", sdg: "SDG 11: Sustainable Cities and Communities", problem: "Communities are vulnerable to earthquakes and volcanic eruptions.", activity: "Hazard mapping and disaster drills.", notice: "Identify hazards in the community.", think: "Analyze disaster risks.", act: "Create a family emergency plan.", output: "Hazard map", reflection: "How can preparedness save lives?" },
-            { grade: "Grade 6", subject: "Science", topic: "Environmental Conservation", goal: "Demonstrate ways to conserve the environment.", sdg: "SDG 13: Climate Action", problem: "Pollution and climate change affect ecosystems.", activity: "Community clean-up and advocacy campaign.", notice: "Observe environmental issues nearby.", think: "Discuss causes of pollution.", act: "Lead a one-week conservation practice.", output: "Advocacy materials", reflection: "What action can you continue after this lesson?" },
-
-            { grade: "Grade 7", subject: "Science", topic: "Scientific Investigation", goal: "Apply scientific methods in solving problems.", sdg: "SDG 4: Quality Education", problem: "Communities need evidence-based solutions to problems.", activity: "Experiment design and data gathering.", notice: "Observe a local issue.", think: "Investigate causes using evidence.", act: "Propose a simple science-based solution.", output: "Investigation report", reflection: "How can scientific thinking improve communities?" },
-            { grade: "Grade 7", subject: "Science", topic: "Ecosystems and Biodiversity", goal: "Explain biodiversity and ecosystem balance.", sdg: "SDG 15: Life on Land", problem: "Human activities threaten biodiversity.", activity: "Biodiversity inventory and awareness campaign.", notice: "Observe biodiversity loss nearby.", think: "Analyze human impacts.", act: "Advocate for biodiversity protection.", output: "Campaign materials", reflection: "Why should biodiversity be protected?" },
-            { grade: "Grade 7", subject: "Science", topic: "Motion and Forces", goal: "Analyze motion and the effects of forces.", sdg: "SDG 9: Industry, Innovation and Infrastructure", problem: "Transportation and infrastructure problems affect society.", activity: "Engineering challenge and prototype activity.", notice: "Observe transportation challenges.", think: "Analyze how motion affects design.", act: "Create a simple innovative model.", output: "Prototype presentation", reflection: "How can innovation solve daily problems?" },
-            { grade: "Grade 7", subject: "Science", topic: "Heat and Energy Transfer", goal: "Explain energy transfer and conservation.", sdg: "SDG 7: Affordable and Clean Energy", problem: "Energy shortages and pollution affect communities.", activity: "Renewable energy research and experimentation.", notice: "Observe energy use in school/home.", think: "Compare renewable and nonrenewable energy.", act: "Practice energy-saving habits.", output: "Research presentation", reflection: "Why is renewable energy important for the future?" },
-
-            { grade: "Grade 8", subject: "Science", topic: "Cell Division and Genetics", goal: "Explain heredity and genetics concepts.", sdg: "SDG 3: Good Health and Well-Being", problem: "Genetic disorders and health issues affect families.", activity: "Family traits survey and infographic making.", notice: "Observe inherited traits.", think: "Discuss how genetics affects health.", act: "Promote healthy lifestyle awareness.", output: "Genetics infographic", reflection: "How can genetics help improve healthcare?" },
-            { grade: "Grade 8", subject: "Science", topic: "Chemical Reactions", goal: "Identify chemical reactions and their applications.", sdg: "SDG 12: Responsible Consumption and Production", problem: "Harmful chemicals contribute to pollution.", activity: "Laboratory investigations and product analysis.", notice: "Observe chemical products used daily.", think: "Analyze environmental impacts.", act: "Reduce harmful chemical use at home.", output: "Investigation report", reflection: "How can responsible chemical use protect the environment?" },
-            { grade: "Grade 8", subject: "Science", topic: "Typhoons and Climate Systems", goal: "Explain climate systems and disaster preparedness.", sdg: "SDG 13: Climate Action", problem: "Climate change intensifies disasters.", activity: "Community interview and preparedness vlog.", notice: "Observe effects of typhoons.", think: "Analyze climate-related risks.", act: "Share preparedness information in the community.", output: "Awareness vlog", reflection: "How can climate awareness reduce disaster risks?" },
-            { grade: "Grade 8", subject: "Science", topic: "Light and Sound", goal: "Explain properties and uses of light and sound.", sdg: "SDG 9: Industry, Innovation and Infrastructure", problem: "Lack of access to technology affects communication.", activity: "Sound investigation and technology presentation.", notice: "Observe how light and sound are used daily.", think: "Analyze their role in technology.", act: "Create a simple communication device model.", output: "Technology presentation", reflection: "How do light and sound improve communication?" },
-
-            { grade: "Grade 9", subject: "Science", topic: "Respiratory and Circulatory System", goal: "Explain how lifestyle affects body systems.", sdg: "SDG 3: Good Health and Well-Being", problem: "Poor lifestyle choices increase health risks.", activity: "Health monitoring and exercise program.", notice: "Observe personal health habits.", think: "Analyze effects on the body.", act: "Follow a wellness routine for one week.", output: "Health journal", reflection: "How can lifestyle choices improve health?" },
-            { grade: "Grade 9", subject: "Science", topic: "Biodiversity and Evolution", goal: "Explain evolution and biodiversity conservation.", sdg: "SDG 15: Life on Land", problem: "Species extinction threatens ecosystems.", activity: "Species research and conservation proposal.", notice: "Observe threats to biodiversity.", think: "Discuss human impacts.", act: "Promote conservation awareness.", output: "Conservation proposal", reflection: "Why should endangered species be protected?" },
-            { grade: "Grade 9", subject: "Science", topic: "Electricity and Magnetism", goal: "Explain principles of electricity and magnetism.", sdg: "SDG 7: Affordable and Clean Energy", problem: "Limited energy resources affect communities.", activity: "Renewable energy research and prototype design.", notice: "Observe energy challenges locally.", think: "Explore alternative energy solutions.", act: "Suggest energy-saving practices.", output: "Prototype model", reflection: "How can science improve energy access?" },
-            { grade: "Grade 9", subject: "Science", topic: "Climate Change and Sustainability", goal: "Analyze causes and effects of climate change.", sdg: "SDG 13: Climate Action", problem: "Climate change affects communities worldwide.", activity: "Carbon footprint tracking and sustainability campaign.", notice: "Observe environmental practices at home.", think: "Analyze personal environmental impact.", act: "Reduce carbon footprint for one week.", output: "Sustainability action plan", reflection: "What sustainable habits can you continue daily?" },
-
-            { grade: "Grade 10", subject: "Science", topic: "DNA and Biotechnology", goal: "Explain applications and ethics of biotechnology.", sdg: "SDG 3: Good Health and Well-Being", problem: "Ethical issues arise from genetic technologies.", activity: "Biotechnology debate and research presentation.", notice: "Observe biotechnology uses in society.", think: "Analyze benefits and ethical concerns.", act: "Create an awareness campaign on responsible biotechnology use.", output: "Debate presentation", reflection: "How can biotechnology improve lives responsibly?" },
-            { grade: "Grade 10", subject: "Science", topic: "Ecosystem Stability and Human Impact", goal: "Analyze human impact on ecosystems.", sdg: "SDG 15: Life on Land", problem: "Pollution and deforestation damage ecosystems.", activity: "Environmental case study and community mapping.", notice: "Observe environmental issues nearby.", think: "Analyze causes and effects.", act: "Participate in a conservation initiative.", output: "Case study report", reflection: "How can communities restore ecosystems?" },
-            { grade: "Grade 10", subject: "Science", topic: "Plate Tectonics and Natural Hazards", goal: "Explain plate tectonics and disaster risk reduction.", sdg: "SDG 11: Sustainable Cities and Communities", problem: "Natural hazards threaten lives and infrastructure.", activity: "Hazard assessment and disaster simulations.", notice: "Identify local hazard-prone areas.", think: "Analyze disaster preparedness gaps.", act: "Develop a family/community preparedness guide.", output: "Preparedness proposal", reflection: "Why should communities prepare for disasters?" },
-            { grade: "Grade 10", subject: "Science", topic: "Global Environmental Issues", goal: "Evaluate global environmental challenges and solutions.", sdg: "SDG 13: Climate Action", problem: "Environmental degradation affects future generations.", activity: "Sustainability summit and awareness video.", notice: "Observe global environmental issues in media/community.", think: "Analyze causes and solutions.", act: "Implement one sustainable habit and encourage others.", output: "Awareness campaign or video", reflection: "How can students become active global citizens?" },
-
-            // --- ENGLISH GRADES 1-10 ---
-            { grade: "Grade 1", subject: "English", topic: "Sharing About Family Through Symbols and Words", goal: "Express ideas about family using simple words and symbols.", sdg: "SDG 4: Quality Education", problem: "Some children struggle to express appreciation for their families.", activity: "Family collage and show-and-tell activity.", notice: "Observe ways family members help each other.", think: "Discuss why families are important.", act: "Help one family member daily for one week.", output: "Family collage and oral sharing", reflection: "How can showing appreciation strengthen families?" },
-            { grade: "Grade 1", subject: "English", topic: "Listening and Following Directions", goal: "Demonstrate active listening and follow instructions correctly.", sdg: "SDG 16: Peace, Justice, and Strong Institutions", problem: "Miscommunication can lead to conflicts and misunderstandings.", activity: "Listening games and role play.", notice: "Observe situations where listening is important.", think: "Discuss effects of not listening carefully.", act: "Practice active listening at home and school for one week.", output: "Listening checklist", reflection: "How does listening help build peaceful relationships?" },
-            { grade: "Grade 1", subject: "English", topic: "Describing People and Places", goal: "Use descriptive words for people and surroundings.", sdg: "SDG 10: Reduced Inequalities", problem: "People are sometimes judged unfairly because of differences.", activity: "Picture description and vocabulary chart.", notice: "Observe similarities and differences among people.", think: "Discuss why respect matters.", act: "Include or help a classmate for one week.", output: "Descriptive paragraph or poster", reflection: "How can kind words make others feel included?" },
-            { grade: "Grade 1", subject: "English", topic: "Storytelling and Simple Narratives", goal: "Retell simple stories and identify lessons learned.", sdg: "SDG 4: Quality Education", problem: "Children may struggle to express experiences through stories.", activity: "Puppet storytelling and story retelling.", notice: "Observe lessons from stories.", think: "Connect stories to real-life experiences.", act: "Share a meaningful story with family members.", output: "Story retelling performance", reflection: "What lesson from a story can help you in real life?" },
-
-            { grade: "Grade 2", subject: "English", topic: "Myself and My Family", goal: "Write and speak about family experiences clearly.", sdg: "SDG 3: Good Health and Well-Being", problem: "Families may lack quality communication time.", activity: "Journal writing and family interview.", notice: "Observe healthy family habits.", think: "Discuss how families support well-being.", act: "Spend quality time helping family members for one week.", output: "Reflection journal", reflection: "How can families support healthy living?" },
-            { grade: "Grade 2", subject: "English", topic: "School and Community", goal: "Describe roles of people in school and community.", sdg: "SDG 11: Sustainable Cities and Communities", problem: "Communities face issues when people do not cooperate.", activity: "Community mapping and awareness poster.", notice: "Observe community needs.", think: "Discuss how people help communities.", act: "Participate in a simple community-helping activity.", output: "Community poster", reflection: "How can children help make communities better?" },
-            { grade: "Grade 2", subject: "English", topic: "Community Helpers", goal: "Identify community helpers and their contributions.", sdg: "SDG 8: Decent Work and Economic Growth", problem: "Community workers are sometimes underappreciated.", activity: "Career day and thank-you letter writing.", notice: "Observe workers in the community.", think: "Discuss how work helps society.", act: "Write appreciation letters to workers.", output: "Thank-you letters", reflection: "Why should we appreciate community helpers?" },
-            { grade: "Grade 2", subject: "English", topic: "Caring for Nature Through Stories", goal: "Understand environmental care through literature.", sdg: "SDG 15: Life on Land", problem: "Pollution harms plants and animals.", activity: "Nature poem and storytelling activity.", notice: "Observe environmental problems nearby.", think: "Discuss causes of pollution.", act: "Practice proper waste disposal for one week.", output: "Nature-themed story or poem", reflection: "How can stories inspire environmental care?" },
-
-            { grade: "Grade 3", subject: "English", topic: "Regional Stories and Traditions", goal: "Appreciate local stories and cultural traditions.", sdg: "SDG 11: Sustainable Cities and Communities", problem: "Local traditions are slowly being forgotten.", activity: "Cultural storytelling and heritage poster.", notice: "Observe local traditions practiced at home/community.", think: "Discuss importance of preserving culture.", act: "Share a local story with others.", output: "Heritage poster", reflection: "Why should traditions be preserved?" },
-            { grade: "Grade 3", subject: "English", topic: "Informational Texts and Procedures", goal: "Read and follow informational and procedural texts.", sdg: "SDG 4: Quality Education", problem: "Misunderstanding instructions can cause problems.", activity: "Procedure writing and instructional video.", notice: "Observe situations requiring instructions.", think: "Analyze importance of clear communication.", act: "Create simple instructions to help family/classmates.", output: "Instructional guide", reflection: "How does clear communication help people?" },
-            { grade: "Grade 3", subject: "English", topic: "National Themes and Filipino Identity", goal: "Express pride in Filipino identity and values.", sdg: "SDG 16: Peace, Justice, and Strong Institutions", problem: "Lack of unity weakens communities and nations.", activity: "Essay writing and oral presentation.", notice: "Observe Filipino values in daily life.", think: "Discuss importance of unity.", act: "Practice one Filipino value daily for one week.", output: "Essay or poster campaign", reflection: "How can students help strengthen the nation?" },
-            { grade: "Grade 3", subject: "English", topic: "Poems and Creative Expression", goal: "Create poems that express feelings and ideas.", sdg: "SDG 10: Reduced Inequalities", problem: "Some people feel unheard or excluded.", activity: "Poetry writing and spoken poetry.", notice: "Observe emotions and experiences around you.", think: "Discuss how poetry expresses feelings.", act: "Share encouraging poems with others.", output: "Spoken poetry presentation", reflection: "How can creativity inspire positive change?" },
-
-            { grade: "Grade 4", subject: "English", topic: "Narrative and Informational Texts", goal: "Analyze stories and informational texts critically.", sdg: "SDG 4: Quality Education", problem: "Limited reading skills affect learning opportunities.", activity: "Reading circles and summary writing.", notice: "Observe how information helps daily life.", think: "Discuss lessons from texts.", act: "Read and share a story with younger learners.", output: "Reading response journal", reflection: "How does reading help people grow?" },
-            { grade: "Grade 4", subject: "English", topic: "Friendly Letters and Communication", goal: "Write respectful and meaningful messages.", sdg: "SDG 16: Peace, Justice, and Strong Institutions", problem: "Miscommunication can damage relationships.", activity: "Letter writing and peer feedback.", notice: "Observe respectful communication.", think: "Discuss how words affect others.", act: "Write encouraging letters to family/friends.", output: "Friendly letter", reflection: "How can respectful communication solve conflicts?" },
-            { grade: "Grade 4", subject: "English", topic: "Culture-Specific Texts", goal: "Understand cultural identity through texts.", sdg: "SDG 11: Sustainable Cities and Communities", problem: "Cultural traditions are often overlooked by younger generations.", activity: "Cultural exhibit and elder interview.", notice: "Observe cultural practices in the community.", think: "Analyze their importance.", act: "Document and share a local tradition.", output: "Multimedia presentation", reflection: "What can students do to preserve culture?" },
-            { grade: "Grade 4", subject: "English", topic: "Visual and Multimedia Texts", goal: "Interpret and create visual texts effectively.", sdg: "SDG 9: Industry, Innovation and Infrastructure", problem: "Media can spread misinformation if not analyzed critically.", activity: "Infographic making and digital storytelling.", notice: "Observe messages in advertisements/media.", think: "Analyze their effects.", act: "Create a positive awareness poster online/offline.", output: "Infographic or digital story", reflection: "How can visuals influence people responsibly?" },
-
-            { grade: "Grade 5", subject: "English", topic: "Literary and Informational Texts", goal: "Compare literary and factual texts critically.", sdg: "SDG 4: Quality Education", problem: "Many learners struggle to identify reliable information.", activity: "Book review and reading journal.", notice: "Observe how texts shape opinions.", think: "Discuss reliable and unreliable information.", act: "Share one useful reading material with others.", output: "Reading journal or review", reflection: "How can reading help people make wise decisions?" },
-            { grade: "Grade 5", subject: "English", topic: "Persuasive Writing", goal: "Write persuasive texts for advocacy and awareness.", sdg: "SDG 13: Climate Action", problem: "Environmental problems continue due to lack of awareness.", activity: "Advocacy letter and persuasive speech.", notice: "Observe environmental issues nearby.", think: "Analyze causes and possible solutions.", act: "Promote one eco-friendly practice for one week.", output: "Persuasive campaign material", reflection: "How can writing encourage people to act?" },
-            { grade: "Grade 5", subject: "English", topic: "Multimedia and Visual Literacy", goal: "Analyze and create multimedia content responsibly.", sdg: "SDG 9: Industry, Innovation and Infrastructure", problem: "Misleading online content affects decision-making.", activity: "Video analysis and digital poster making.", notice: "Observe messages from media and advertisements.", think: "Discuss how media affects choices.", act: "Create responsible digital content.", output: "Multimedia presentation", reflection: "Why should people think critically about media?" },
-            { grade: "Grade 5", subject: "English", topic: "Research and Reporting", goal: "Conduct simple research and present findings clearly.", sdg: "SDG 4: Quality Education", problem: "Lack of research skills can spread misinformation.", activity: "Interview activity and oral reporting.", notice: "Observe questions or issues in the community.", think: "Research causes and facts.", act: "Share accurate information with others.", output: "Research report", reflection: "How can research help solve problems?" },
-
-            { grade: "Grade 6", subject: "English", topic: "Narrative and Expository Writing", goal: "Write organized narratives and explanatory texts.", sdg: "SDG 4: Quality Education", problem: "Poor communication may lead to misunderstandings.", activity: "Essay writing and reflection journal.", notice: "Observe situations needing clear communication.", think: "Analyze effective writing techniques.", act: "Write a meaningful story or reflection to inspire others.", output: "Essay or narrative composition", reflection: "How can writing influence people positively?" },
-            { grade: "Grade 6", subject: "English", topic: "Persuasive and Multimedia Texts", goal: "Evaluate persuasive techniques in media and texts.", sdg: "SDG 16: Peace, Justice, and Strong Institutions", problem: "False and harmful information spreads easily online.", activity: "Debate and multimedia campaign.", notice: "Observe persuasive messages in media.", think: "Analyze truthfulness and fairness.", act: "Share responsible and truthful messages online.", output: "Multimedia advocacy material", reflection: "Why should media communication be ethical?" },
-            { grade: "Grade 6", subject: "English", topic: "Critical Reading and Analysis", goal: "Analyze texts using critical thinking skills.", sdg: "SDG 10: Reduced Inequalities", problem: "Bias and misinformation create misunderstanding among people.", activity: "News analysis and opinion writing.", notice: "Observe different perspectives in news/articles.", think: "Discuss fairness and evidence.", act: "Practice respectful discussion for one week.", output: "Critical analysis essay", reflection: "Why is critical thinking important in society?" },
-            { grade: "Grade 6", subject: "English", topic: "Culture-Based Texts", goal: "Appreciate cultural identity through literature.", sdg: "SDG 11: Sustainable Cities and Communities", problem: "Younger generations may lose appreciation for traditions.", activity: "Cultural storytelling and documentary viewing.", notice: "Observe cultural practices in the community.", think: "Discuss importance of preserving traditions.", act: "Share cultural stories or practices with others.", output: "Cultural blog or presentation", reflection: "How can literature preserve culture?" },
-
-            { grade: "Grade 7", subject: "English", topic: "Literary Texts and Personal Narratives", goal: "Express emotions and experiences through narratives.", sdg: "SDG 3: Good Health and Well-Being", problem: "Many young people struggle to express emotions healthily.", activity: "Reflective journal and podcast recording.", notice: "Observe emotions and experiences in daily life.", think: "Reflect on healthy self-expression.", act: "Share encouraging personal stories with peers.", output: "Personal narrative or podcast", reflection: "How can storytelling support mental wellness?" },
-            { grade: "Grade 7", subject: "English", topic: "Informational and Expository Texts", goal: "Analyze informational texts critically.", sdg: "SDG 4: Quality Education", problem: "Misinformation affects learning and decision-making.", activity: "Research infographic and article analysis.", notice: "Observe information sources used daily.", think: "Evaluate reliability of sources.", act: "Share verified information with classmates/family.", output: "Infographic presentation", reflection: "Why is checking information important?" },
-            { grade: "Grade 7", subject: "English", topic: "Media and Information Literacy", goal: "Evaluate media messages critically and responsibly.", sdg: "SDG 16: Peace, Justice, and Strong Institutions", problem: "Fake news spreads confusion and conflict.", activity: "Fake news analysis and awareness campaign.", notice: "Observe misleading information online.", think: "Analyze effects of misinformation.", act: "Practice responsible sharing online for one week.", output: "Media awareness campaign", reflection: "How can students become responsible media users?" },
-            { grade: "Grade 7", subject: "English", topic: "Creative Writing", goal: "Use creative writing to express ideas and empathy.", sdg: "SDG 10: Reduced Inequalities", problem: "Some groups feel unheard or excluded.", activity: "Spoken poetry and short story writing.", notice: "Observe experiences of different people.", think: "Reflect on empathy and inclusion.", act: "Write stories promoting kindness and inclusion.", output: "Creative writing portfolio", reflection: "How can literature promote empathy?" },
-
-            { grade: "Grade 8", subject: "English", topic: "Literary Analysis", goal: "Analyze literary texts and social themes.", sdg: "SDG 5: Gender Equality", problem: "Gender stereotypes still affect society.", activity: "Character analysis and panel discussion.", notice: "Observe stereotypes in media/literature.", think: "Discuss effects of inequality.", act: "Promote gender respect in school/community.", output: "Literary reflection", reflection: "How can literature challenge stereotypes?" },
-            { grade: "Grade 8", subject: "English", topic: "Argumentative Texts", goal: "Construct evidence-based arguments respectfully.", sdg: "SDG 16: Peace, Justice, and Strong Institutions", problem: "Conflicts arise when opinions are unsupported or disrespectful.", activity: "Debate and position paper writing.", notice: "Observe issues that create disagreements.", think: "Analyze evidence and viewpoints.", act: "Practice respectful discussions for one week.", output: "Position paper", reflection: "Why is respectful argument important?" },
-            { grade: "Grade 8", subject: "English", topic: "Multimedia Communication", goal: "Create responsible multimedia content.", sdg: "SDG 9: Industry, Innovation and Infrastructure", problem: "Irresponsible digital content can harm people.", activity: "Video blog and podcast creation.", notice: "Observe effects of digital communication.", think: "Analyze responsible content creation.", act: "Create positive multimedia messages.", output: "Podcast or vlog", reflection: "How can digital communication influence society?" },
-            { grade: "Grade 8", subject: "English", topic: "Research-Based Writing", goal: "Conduct research using reliable evidence.", sdg: "SDG 4: Quality Education", problem: "False information affects public understanding.", activity: "Research presentation and interview project.", notice: "Observe issues needing factual information.", think: "Evaluate reliable evidence.", act: "Share researched findings with others.", output: "Research report", reflection: "How can research support informed decisions?" },
-
-            { grade: "Grade 9", subject: "English", topic: "Literary Texts and One-Act Plays", goal: "Analyze drama and perform literary texts.", sdg: "SDG 16: Peace, Justice, and Strong Institutions", problem: "Social conflicts and misunderstandings affect communities.", activity: "Scriptwriting and role play.", notice: "Observe social issues reflected in stories.", think: "Analyze emotions and perspectives.", act: "Present performances promoting awareness.", output: "One-act play performance", reflection: "How can drama inspire empathy and change?" },
-            { grade: "Grade 9", subject: "English", topic: "Argumentative and Informational Texts", goal: "Write evidence-based arguments on social issues.", sdg: "SDG 13: Climate Action", problem: "Climate issues continue because of lack of action.", activity: "Documentary analysis and public speaking.", notice: "Observe environmental concerns nearby.", think: "Analyze causes and solutions.", act: "Advocate one sustainable practice for one week.", output: "Advocacy speech or paper", reflection: "How can students influence climate action?" },
-            { grade: "Grade 9", subject: "English", topic: "Journalism and Media Writing", goal: "Produce accurate and ethical journalistic texts.", sdg: "SDG 16: Peace, Justice, and Strong Institutions", problem: "False reporting can mislead communities.", activity: "News writing and school newsletter.", notice: "Observe how news affects society.", think: "Discuss ethics in journalism.", act: "Share truthful and verified information responsibly.", output: "News article or newsletter", reflection: "Why is ethical journalism important?" },
-            { grade: "Grade 9", subject: "English", topic: "Multimedia Publishing", goal: "Publish multimedia texts responsibly.", sdg: "SDG 9: Industry, Innovation and Infrastructure", problem: "Harmful online content affects communities.", activity: "Blog creation and awareness video production.", notice: "Observe impacts of digital content.", think: "Analyze audience responsibility.", act: "Create positive digital campaigns.", output: "Blog or awareness video", reflection: "How can multimedia inspire positive change?" },
-
-            { grade: "Grade 10", subject: "English", topic: "Literary Criticism and Short Film", goal: "Critique literary works and films thoughtfully.", sdg: "SDG 10: Reduced Inequalities", problem: "Social inequality affects many communities.", activity: "Short film analysis and literary critique.", notice: "Observe social issues presented in films/stories.", think: "Analyze their impact on society.", act: "Create awareness through storytelling.", output: "Literary critique or short film", reflection: "How can films promote understanding?" },
-            { grade: "Grade 10", subject: "English", topic: "Documentaries and Vlogs", goal: "Create informative and advocacy-based media.", sdg: "SDG 13: Climate Action", problem: "Climate issues require urgent awareness and action.", activity: "Documentary production and vlog creation.", notice: "Observe environmental challenges locally.", think: "Discuss effects and solutions.", act: "Produce advocacy media encouraging sustainable practices.", output: "Documentary or vlog", reflection: "How can media inspire environmental action?" },
-            { grade: "Grade 10", subject: "English", topic: "Academic and Transactional Texts", goal: "Use formal communication effectively and ethically.", sdg: "SDG 4: Quality Education", problem: "Poor communication affects academic and workplace success.", activity: "Research proposal and formal presentation.", notice: "Observe importance of formal communication.", think: "Analyze effective communication practices.", act: "Practice professional communication in real-life tasks.", output: "Formal report or presentation", reflection: "Why is ethical communication important?" },
-            { grade: "Grade 10", subject: "English", topic: "Multimodal and Multimedia Texts", goal: "Create integrated multimedia texts responsibly.", sdg: "SDG 9: Industry, Innovation and Infrastructure", problem: "Digital misuse affects online communities.", activity: "Website creation and multimedia campaign.", notice: "Observe how technology influences communication.", think: "Discuss responsible digital citizenship.", act: "Create multimedia content promoting positive social action.", output: "Digital portfolio or campaign", reflection: "How can students become responsible digital citizens?" },
-
-            // --- MATH GRADES 1-10 ---
-            { grade: "Grade 1", subject: "Math", topic: "Counting & Comparing Numbers", goal: "Develop number sense through counting", sdg: "SDG 4: Quality Education", problem: "Low early numeracy skills", activity: "Number hunt", notice: "Notice numbers at home", think: "Think why counting matters", act: "Act count objects daily", output: "Counting chart", reflection: "How do numbers help daily life?" },
-            { grade: "Grade 1", subject: "Math", topic: "Addition & Subtraction", goal: "Solve simple problems using operations", sdg: "SDG 1: No Poverty", problem: "Difficulty managing small resources", activity: "Grocery role play", notice: "Notice spending", think: "Think saving importance", act: "Act simple budgeting", output: "Budget drawing", reflection: "How does math help families?" },
-            { grade: "Grade 1", subject: "Math", topic: "Shapes & Patterns", goal: "Identify and create patterns/shapes", sdg: "SDG 9: Industry, Innovation and Infrastructure", problem: "Lack of awareness of structures", activity: "Shape collage", notice: "Notice shapes around", think: "Think design purpose", act: "Act build pattern art", output: "Shape artwork", reflection: "Where do we see shapes in life?" },
-            { grade: "Grade 1", subject: "Math", topic: "Measurement & Time", goal: "Understand time and routines", sdg: "SDG 3: Good Health and Well-Being", problem: "Poor time management", activity: "Daily routine chart", notice: "Notice routines", think: "Think importance of time", act: "Act create schedule", output: "Routine chart", reflection: "Why is time important?" },
-
-            { grade: "Grade 2", subject: "Math", topic: "Place Value", goal: "Understand number structure", sdg: "SDG 4: Quality Education", problem: "Difficulty reading large numbers", activity: "Number charting", notice: "Notice numbers in environment", think: "Think value meaning", act: "Act group numbers", output: "Place value chart", reflection: "Why understand numbers?" },
-            { grade: "Grade 2", subject: "Math", topic: "Addition/Subtraction (Larger Numbers)", goal: "Solve multi-digit problems", sdg: "SDG 8: Decent Work and Economic Growth", problem: "Weak budgeting awareness", activity: "Store simulation", notice: "Notice buying/selling", think: "Think money flow", act: "Act simulate transactions", output: "Mock receipts", reflection: "How is math used in work?" },
-            { grade: "Grade 2", subject: "Math", topic: "Basic Fractions", goal: "Understand equal sharing", sdg: "SDG 2: Zero Hunger", problem: "Unequal food sharing", activity: "Fraction pizza", notice: "Notice sharing", think: "Think fairness", act: "Act divide food models", output: "Fraction model", reflection: "Why is fair sharing important?" },
-            { grade: "Grade 2", subject: "Math", topic: "Data & Graphs", goal: "Collect and interpret data", sdg: "SDG 3: Good Health and Well-Being", problem: "Lack of health awareness", activity: "Class survey", notice: "Notice habits", think: "Think patterns", act: "Act create graph", output: "Bar graph", reflection: "How do graphs help health?" },
-
-            { grade: "Grade 3", subject: "Math", topic: "Multiplication & Division", goal: "Understand grouping & sharing", sdg: "SDG 8: Decent Work and Economic Growth", problem: "Inefficient resource sharing", activity: "Market simulation", notice: "Notice trade", think: "Think grouping", act: "Act simulate selling", output: "Product list", reflection: "How does math help business?" },
-            { grade: "Grade 3", subject: "Math", topic: "Money & Financial Literacy", goal: "Manage money basics", sdg: "SDG 1: No Poverty", problem: "Poor saving habits", activity: "Budget planning", notice: "Notice spending", think: "Think saving", act: "Act savings tracker", output: "Savings chart", reflection: "Why should people save?" },
-            { grade: "Grade 3", subject: "Math", topic: "Geometry & Symmetry", goal: "Recognize shapes in environment", sdg: "SDG 9: Industry, Innovation and Infrastructure", problem: "Lack of design awareness", activity: "Symmetry art", notice: "Notice shapes", think: "Think design use", act: "Act create design", output: "Symmetry art", reflection: "How is geometry used in life?" },
-            { grade: "Grade 3", subject: "Math", topic: "Measurement & Problem Solving", goal: "Apply measurement in real life", sdg: "SDG 11: Sustainable Cities and Communities", problem: "Poor understanding of space", activity: "Community mapping", notice: "Notice spaces", think: "Measurement use", act: "Act measure surroundings", output: "Map sketch", reflection: "Why measure things?" },
-
-            { grade: "Grade 4", subject: "Math", topic: "Whole Numbers Operations", goal: "Solve multi-step problems", sdg: "SDG 4: Quality Education", problem: "Weak problem-solving skills", activity: "Math stations", notice: "Notice challenges", think: "Think strategies", act: "Act solve tasks", output: "Problem set", reflection: "How does math improve thinking?" },
-            { grade: "Grade 4", subject: "Math", topic: "Fractions & Decimals", goal: "Apply fractions in daily life", sdg: "SDG 2: Zero Hunger", problem: "Improper food measurement", activity: "Recipe activity", notice: "Notice food portions", think: "Think nutrition", act: "Act cook measurement task", output: "Recipe sheet", reflection: "Why measure food properly?" },
-            { grade: "Grade 4", subject: "Math", topic: "Perimeter & Area", goal: "Measure spaces accurately", sdg: "SDG 11: Sustainable Cities and Communities", problem: "Poor space planning", activity: "Garden design", notice: "Notice spaces", think: "Think planning", act: "Act design layout", output: "Floor plan", reflection: "Why plan spaces?" },
-            { grade: "Grade 4", subject: "Math", topic: "Data Interpretation", goal: "Analyze information", sdg: "SDG 3: Good Health and Well-Being", problem: "Misinterpretation of data", activity: "Health survey", notice: "Notice health data", think: "Think patterns", act: "Act graph analysis", output: "Health report", reflection: "How does data improve health?" },
-
-            { grade: "Grade 5", subject: "Math", topic: "Decimals & Percentages", goal: "Apply percent in real life", sdg: "SDG 8: Decent Work and Economic Growth", problem: "Poor financial decisions", activity: "Sales activity", notice: "Notice prices", think: "Think discounts", act: "Act compute savings", output: "Discount sheet", reflection: "Why use percentages?" },
-            { grade: "Grade 5", subject: "Math", topic: "Ratio & Proportion", goal: "Understand relationships", sdg: "SDG 6: Clean Water and Sanitation", problem: "Water wastage", activity: "Water usage tracking", notice: "Notice water use", think: "Conservation", act: "Act monitor usage", output: "Water log", reflection: "Why conserve water?" },
-            { grade: "Grade 5", subject: "Math", topic: "Volume & Measurement", goal: "Measure capacity accurately", sdg: "SDG 12: Responsible Consumption and Production", problem: "Excess waste production", activity: "Packaging design", notice: "Notice waste", think: "Reduction", act: "Act design eco-packaging", output: "Model package", reflection: "How reduce waste?" },
-            { grade: "Grade 5", subject: "Math", topic: "Statistics & Probability", goal: "Interpret and predict data", sdg: "SDG 3: Good Health and Well-Being", problem: "Poor health awareness", activity: "Health survey", notice: "Notice health trends", think: "Risks", act: "Act analyze data", output: "Survey report", reflection: "How does data help decisions?" },
-
-            { grade: "Grade 6", subject: "Math", topic: "Algebraic Expressions", goal: "Model real situations mathematically", sdg: "SDG 9: Industry, Innovation and Infrastructure", problem: "Inefficient problem modeling", activity: "Pattern exploration", notice: "Observe patterns", think: "Analyze rules", act: "Create equations", output: "Equation model", reflection: "How does math solve problems?" },
-            { grade: "Grade 7", subject: "Math", topic: "Linear Equations", goal: "Solve real-life financial problems", sdg: "SDG 8: Decent Work and Economic Growth", problem: "Poor financial planning", activity: "Budget simulation", notice: "Notice expenses", think: "Think budgeting", act: "Create plan", output: "Budget sheet", reflection: "How does math help money management?" },
-            { grade: "Grade 8", subject: "Math", topic: "Linear Functions", goal: "Predict trends using graphs", sdg: "SDG 8: Decent Work and Economic Growth", problem: "Unstable financial planning", activity: "Business modeling", notice: "Observe income", think: "Analyze trends", act: "Forecast savings", output: "Graph report", reflection: "Why predict trends?" },
-            { grade: "Grade 9", subject: "Math", topic: "Trigonometry", goal: "Apply measurement in construction", sdg: "SDG 11: Sustainable Cities and Communities", problem: "Unsafe/inefficient structures", activity: "Design challenge", notice: "Observe structures", think: "Analyze angles", act: "Design model", output: "Building sketch", reflection: "How does math build cities?" },
-            { grade: "Grade 10", subject: "Math", topic: "Climate Modeling", goal: "Analyze environmental data", sdg: "SDG 13: Climate Action", problem: "Climate change impact", activity: "Data investigation", notice: "Observe climate data", think: "Think causes", act: "Propose solutions", output: "Climate report", reflection: "How can math help Earth?" },
-
-            // --- FILIPINO GRADES 1-6 + ADVANCED ---
-            { grade: "Grade 1", subject: "Filipino", topic: "Pagpapakilala sa Sarili at Pamilya", goal: "Maipakilala ang sarili at pamilya gamit ang payak na salita", sdg: "SDG 4: Quality Education", problem: "Kabulangan sa self-expression ng bata", activity: "Show-and-tell ng pamilya", notice: "Ilarawan ang pamilya", think: "Bakit mahalaga ang pamilya", act: "Gumuhit at magbahagi", output: "Family drawing", reflection: "Bakit mahalagang kilalanin ang pamilya?" },
-            { grade: "Grade 1", subject: "Filipino", topic: "Pakikinig at Pagsunod sa Panuto", goal: "Makasunod sa simpleng panuto", sdg: "SDG 16: Peace, Justice and Strong Institutions", problem: "Hindi pagkakaintindihan sa klase", activity: "Listening games", notice: "Panuto sa paligid", think: "Epekto ng hindi pagsunod", act: "Sundin classroom instructions", output: "Role play output", reflection: "Bakit mahalaga ang pakikinig?" },
-            { grade: "Grade 1", subject: "Filipino", topic: "Paglalarawan ng Tao, Hayop, Bagay", goal: "Makapaglarawan gamit ang payak na salita", sdg: "SDG 10: Reduced Inequalities", problem: "Hindi paggalang sa pagkakaiba", activity: "Picture description", notice: "Pagkakaiba", think: "Paggalang", act: "Gumawa ng description chart", output: "Vocabulary chart", reflection: "Paano natin igagalang ang iba?" },
-            { grade: "Grade 1", subject: "Filipino", topic: "Pagkukuwento", goal: "Makapagpahayag ng simpleng kuwento", sdg: "SDG 4: Quality Education", problem: "Kakulangan sa storytelling skills", activity: "Story sequencing", notice: "Kuwento", think: "Aral", act: "Ikuwento muli", output: "Story retelling", reflection: "Ano ang natutunan sa kuwento?" },
-
-            { grade: "Grade 2", subject: "Filipino", topic: "Ako at Pamayanan", goal: "Maipaliwanag ang sarili sa komunidad", sdg: "SDG 11: Sustainable Cities and Communities", problem: "Kakulangan sa community awareness", activity: "Community mapping", notice: "Lugar sa paligid", think: "Papel sa komunidad", act: "Gumawa ng mapa", output: "Community map", reflection: "Paano mapapabuti ang komunidad?" },
-            { grade: "Grade 2", subject: "Filipino", topic: "Mga Katulong sa Pamayanan", goal: "Makilala ang tungkulin ng mga manggagawa", sdg: "SDG 8: Decent Work and Economic Growth", problem: "Hindi pagpapahalaga sa workers", activity: "Role play", notice: "Trabaho", think: "Kahalagahan", act: "Thank-you card", output: "Career poster", reflection: "Bakit mahalaga ang manggagawa?" },
-            { grade: "Grade 2", subject: "Filipino", topic: "Pagmamahal sa Kalikasan", goal: "Maipakita ang pangangalaga sa kalikasan", sdg: "SDG 15: Life on Land", problem: "Polusyon at basura", activity: "Nature walk", notice: "Kalikasan", think: "Epekto ng basura", act: "Recycling activity", output: "Eco craft", reflection: "Bakit dapat alagaan ang kalikasan?" },
-            { grade: "Grade 2", subject: "Filipino", topic: "Tula at Awit", goal: "Maipahayag ang damdamin sa tula at awit", sdg: "SDG 3: Good Health and Well-Being", problem: "Hindi malayang pagpapahayag ng emosyon", activity: "Poetry recital", notice: "Damdamin", think: "Emosyon", act: "Bumuo ng tula", output: "Spoken poem", reflection: "Paano nakatutulong ang tula?" },
-
-            { grade: "Grade 3", subject: "Filipino", topic: "Kuwentong Bayan at Alamat", goal: "Maunawaan ang kulturang Pilipino", sdg: "SDG 11: Sustainable Cities and Communities", problem: "Pagkalimot sa tradisyon", activity: "Story dramatization", notice: "Kuwento", think: "Aral", act: "Role play", output: "Cultural performance", reflection: "Bakit mahalaga ang kultura?" },
-            { grade: "Grade 3", subject: "Filipino", topic: "Pagbibigay Panuto", goal: "Makasunod at makagawa ng malinaw na panuto", sdg: "SDG 4: Quality Education", problem: "Mali-maling komunikasyon", activity: "Instruction writing", notice: "Steps", think: "Kahalagahan", act: "Gumawa ng instructions", output: "Instruction sheet", reflection: "Bakit mahalaga ang malinaw na panuto?" },
-            { grade: "Grade 3", subject: "Filipino", topic: "Pagiging Pilipino", goal: "Maipakita ang pagmamahal sa bayan", sdg: "SDG 16: Peace, Justice and Strong Institutions", problem: "Kakulangan sa national identity", activity: "Poster making", notice: "Bayan", think: "Pagkakaisa", act: "Slogan creation", output: "Advocacy poster", reflection: "Ano ang pagiging Pilipino?" },
-            { grade: "Grade 3", subject: "Filipino", topic: "Malikhaing Pagsulat", goal: "Makapagpahayag ng damdamin sa pagsulat", sdg: "SDG 10: Reduced Inequalities", problem: "Hindi naririnig ang boses ng bata", activity: "Story writing", notice: "Damdamin", think: "Boses ng bata", act: "Sumulat ng kuwento", output: "Short story", reflection: "Paano nakatutulong ang pagsulat?" },
-
-            { grade: "Grade 4", subject: "Filipino", topic: "Kuwento at Sanaysay", goal: "Maunawaan ang binasang teksto", sdg: "SDG 4: Quality Education", problem: "Mababang reading comprehension", activity: "Reading circles", notice: "Teksto", think: "Mensahe", act: "Buod", output: "Story summary", reflection: "Bakit mahalaga ang pagbabasa?" },
-            { grade: "Grade 4", subject: "Filipino", topic: "Liham", goal: "Makapagsulat ng liham", sdg: "SDG 16: Peace, Justice and Strong Institutions", problem: "Mahinang komunikasyon", activity: "Letter writing", notice: "Sitwasyon", think: "Tono", act: "Sumulat ng liham", output: "Sample letters", reflection: "Paano nakakatulong ang liham?" },
-            { grade: "Grade 4", subject: "Filipino", topic: "Kulturang Pilipino", goal: "Mapahalagahan ang tradisyon", sdg: "SDG 11: Sustainable Cities and Communities", problem: "Pagkalimot sa kultura", activity: "Interview elders", notice: "Kultura", think: "Kahalagahan", act: "Cultural poster", output: "Heritage poster", reflection: "Bakit mahalaga ang kultura?" },
-            { grade: "Grade 4", subject: "Filipino", topic: "Midya at Biswal", goal: "Maging mapanuri sa media", sdg: "SDG 9: Industry, Innovation and Infrastructure", problem: "Fake news", activity: "Media analysis", notice: "Content", think: "Totoo o hindi", act: "Infographic", output: "Media poster", reflection: "Paano maging mapanuri?" },
-
-            { grade: "Grade 5", subject: "Filipino", topic: "Pagbasa ng Panitikan", goal: "Maunawaan ang panitikan", sdg: "SDG 4: Quality Education", problem: "Kulang sa reading comprehension", activity: "Book review", notice: "Kuwento", think: "Aral", act: "Reading journal", output: "Reading log", reflection: "Ano ang natutunan sa panitikan?" },
-            { grade: "Grade 5", subject: "Filipino", topic: "Panghihikayat", goal: "Makasulat ng tekstong panghihikayat", sdg: "SDG 13: Climate Action", problem: "Kakulangan sa environmental awareness", activity: "Advocacy writing", notice: "Kalikasan", think: "Problema", act: "Campaign letter", output: "Advocacy letter", reflection: "Paano makahihikayat ang pagsulat?" },
-            { grade: "Grade 5", subject: "Filipino", topic: "Midya at Teknolohiya", goal: "Gumamit ng media nang responsable", sdg: "SDG 9: Industry, Innovation and Infrastructure", problem: "Maling paggamit ng social media", activity: "Digital poster", notice: "Online content", think: "Responsibilidad", act: "Campaign poster", output: "Digital output", reflection: "Paano maging responsible online?" },
-            { grade: "Grade 5", subject: "Filipino", topic: "Pananaliksik", goal: "Makapagsagawa ng simpleng pananaliksik", sdg: "SDG 4: Quality Education", problem: "Kakulangan sa impormasyon literacy", activity: "Interview activity", notice: "Isyu", think: "Datos", act: "Research report", output: "Research output", reflection: "Bakit mahalaga ang pananaliksik?" },
-
-            { grade: "Grade 6", subject: "Filipino", topic: "Sanaysay", goal: "Makapagsulat ng malinaw na sanaysay", sdg: "SDG 4: Quality Education", problem: "Mahinang pagpapahayag", activity: "Essay writing", notice: "Notice experiences", think: "Think ideas", act: "Write essay", output: "Essay", reflection: "Paano nakatutulong ang pagsulat?" },
-            { grade: "Grade 6", subject: "Filipino", topic: "Pangangatwiran", goal: "Makipagdebate nang maayos", sdg: "SDG 16: Peace, Justice and Strong Institutions", problem: "Hindi maayos na diskusyon", activity: "Debate", notice: "Notice issues", think: "Think sides", act: "Defend opinion", output: "Position paper", reflection: "Bakit mahalaga ang respeto sa opinyon?" },
-            { grade: "Grade 6", subject: "Filipino", topic: "Kritikal na Pagbasa", goal: "Maging mapanuri sa teksto", sdg: "SDG 10: Reduced Inequalities", problem: "Fake news at misinformation", activity: "Article analysis", notice: "Notice texts", think: "Think truth", act: "Fact-check", output: "Analysis report", reflection: "Bakit mahalaga ang pagiging mapanuri?" },
-            { grade: "Grade 6", subject: "Filipino", topic: "Panitikang Pilipino", goal: "Maunawaan ang kulturang Pilipino", sdg: "SDG 11: Sustainable Cities and Communities", problem: "Pagkalimot sa kultura", activity: "Storytelling", notice: "Notice traditions", think: "Think meaning", act: "Cultural blog", output: "Cultural blog", reflection: "Paano pinapahalagahan ang kultura?" },
-            
-            { grade: "Grade 7", subject: "Filipino", topic: "Advanced Communication & Literacy", goal: "Apply advanced communication and literacy skills across multi-modal formats.", sdg: "SDG 4: Quality Education", problem: "Real-world language isolation and disconnected societal communication.", activity: "Debate, media presentation, and structural research writing.", notice: "Notice community and socio-cultural systemic gaps.", think: "Analyze systemic media/text implications via structural logic.", act: "Produce developmental communication frameworks for local groups.", output: "Socio-civic academic essays or multimedia baseline projects", reflection: "How does language shape society?" }
-        ];
-
-        // Global SDG Color Mapping
-        const sdgColors = {
-            "SDG 1:": "#e5243b", "SDG 2:": "#dda63a", "SDG 3:": "#4c9f38",
-            "SDG 4:": "#c5192d", "SDG 5:": "#ff3a21", "SDG 6:": "#26bde2",
-            "SDG 7:": "#fcc30b", "SDG 8:": "#a21942", "SDG 9:": "#fd6925",
-            "SDG 10:": "#dd1367", "SDG 11:": "#fd9d24", "SDG 12:": "#bf8b2e",
-            "SDG 13:": "#3f7e44", "SDG 14:": "#0a97d9", "SDG 15:": "#56c02b",
-            "SDG 16:": "#00689d", "SDG 17:": "#19486a"
+        // Structured Database mapped manually from uploaded DOCX file
+        const fullCurriculumMatrixDB = {
+            science: {
+                "Grade 1": [
+                    { q: "Q1", topic: "Living and Non-Living Things", goal: "Identify characteristics of living and non-living things.", sdg: "SDG 15: Life on Land", problem: "Living things are often neglected or harmed.", activity: "Nature walk and sorting activity.", task: "<b>Notice:</b> Observe living things in the community.<br><b>Think:</b> Discuss why plants/animals need care.<br><b>Act:</b> Care for one plant/pet for one week.", output: "Observation journal or collage", reflection: "How can caring for living things help the environment?" },
+                    { q: "Q2", topic: "Parts of Plants and Animals", goal: "Describe parts and functions of plants and animals.", sdg: "SDG 15: Life on Land", problem: "Plants and animals are often damaged due to lack of understanding.", activity: "Plant observation and mini gardening.", task: "<b>Notice:</b> Observe plants and animals nearby.<br><b>Think:</b> Analyze how they help humans.<br><b>Act:</b> Grow a small plant at home.", output: "Plant growth diary", reflection: "Why is protecting plants and animals important?" },
+                    { q: "Q3", topic: "Weather and Seasons", goal: "Explain basic weather patterns and seasons.", sdg: "SDG 13: Climate Action", problem: "Communities experience strong weather disturbances and disasters.", activity: "Weather charting and weather diary.", task: "<b>Notice:</b> Observe daily weather changes.<br><b>Think:</b> Discuss how weather affects people.<br><b>Act:</b> Prepare a simple family weather safety checklist.", output: "Weather journal and checklist", reflection: "How can weather awareness keep people safe?" },
+                    { q: "Q4", topic: "Caring for the Environment", goal: "Demonstrate proper waste management practices.", sdg: "SDG 12: Responsible Consumption & Production", problem: "Littering and improper waste disposal pollute communities.", activity: "Recycling craft and segregation game.", task: "<b>Notice:</b> Observe waste problems in school/home.<br><b>Think:</b> Discuss effects of littering.<br><b>Act:</b> Practice waste segregation for one week.", output: "Recycling craft or poster", reflection: "What small actions can help keep the environment clean?" }
+                ],
+                "Grade 2": [
+                    { q: "Q1", topic: "Human Body Parts and Health", goal: "Explain healthy habits and body care.", sdg: "SDG 3: Good Health and Well-Being", problem: "Poor hygiene and unhealthy habits cause sickness.", activity: "Hygiene role play & healthy habits chart.", task: "<b>Notice:</b> Observe daily health habits.<br><b>Think:</b> Identify healthy and unhealthy practices.<br><b>Act:</b> Follow healthy routine for one week.", output: "Health tracker", reflection: "Which healthy habit helped you the most?" },
+                    { q: "Q2", topic: "Animals and Their Habitats", goal: "Identify animal habitats and their importance.", sdg: "SDG 15: Life on Land", problem: "Animal habitats are destroyed by pollution and deforestation.", activity: "Habitat diorama and observation activity.", task: "<b>Notice:</b> Observe animals in environment.<br><b>Think:</b> Discuss habitat destruction.<br><b>Act:</b> Create awareness signs.", output: "Diorama or awareness poster", reflection: "Why should humans protect animal habitats?" },
+                    { q: "Q3", topic: "Properties of Materials", goal: "Classify materials based on properties.", sdg: "SDG 12: Responsible Consumption & Production", problem: "Excessive waste harms the environment.", activity: "Recycling challenge and experiments.", task: "<b>Notice:</b> Observe household waste.<br><b>Think:</b> Identify reusable materials.<br><b>Act:</b> Reuse materials to create useful objects.", output: "Recycled product", reflection: "How can reusing materials reduce waste?" },
+                    { q: "Q4", topic: "Sun, Moon, and Stars", goal: "Describe the importance of celestial bodies.", sdg: "SDG 4: Quality Education", problem: "Many students lack awareness about space science.", activity: "Sky observation journal & moon phase chart.", task: "<b>Notice:</b> Observe sky nightly.<br><b>Think:</b> Discuss how celestial bodies affect life.<br><b>Act:</b> Share space facts with family.", output: "Space journal", reflection: "What did you learn about the sky that amazed you?" }
+                ],
+                "Grade 3": [
+                    { q: "Q1", topic: "Plants and Their Life Cycle", goal: "Explain stages of plant growth.", sdg: "SDG 15: Life on Land", problem: "Lack of plants contributes to environmental problems.", activity: "Seed planting and growth journal.", task: "<b>Notice:</b> Observe plants around.<br><b>Think:</b> Discuss why plants matter.<br><b>Act:</b> Plant and care for seeds for one week.", output: "Growth journal", reflection: "How do plants help humans and nature?" },
+                    { q: "Q2", topic: "States of Matter", goal: "Identify solid, liquid, and gas and their properties.", sdg: "SDG 6: Clean Water and Sanitation", problem: "Water pollution affects communities.", activity: "Ice melting experiment & water observation.", task: "<b>Notice:</b> Observe water use at home.<br><b>Think:</b> Identify ways water is wasted.<br><b>Act:</b> Practice water-saving habits.", output: "Water conservation checklist", reflection: "Why should we conserve clean water?" },
+                    { q: "Q3", topic: "Force and Motion", goal: "Explain how force affects movement.", sdg: "SDG 9: Industry, Innovation & Infrastructure", problem: "Unsafe transportation and inefficient machines affect daily life.", activity: "Ramp experiment and toy car investigation.", task: "<b>Notice:</b> Observe moving objects.<br><b>Think:</b> Explain how force works.<br><b>Act:</b> Design simple moving toy from recycled materials.", output: "Prototype toy", reflection: "How does force help improve daily activities?" },
+                    { q: "Q4", topic: "Earth and Natural Resources", goal: "Identify natural resources and ways to conserve them.", sdg: "SDG 13: Climate Action", problem: "Natural resources are overused and polluted.", activity: "Recycling campaign and poster making.", task: "<b>Notice:</b> Observe resources used daily.<br><b>Think:</b> Discuss effects of overconsumption.<br><b>Act:</b> Reduce one wasteful habit.", output: "Awareness poster", reflection: "How can children help conserve resources?" }
+                ],
+                "Grade 4": [
+                    { q: "Q1", topic: "Digestive and Respiratory System", goal: "Explain how body systems work together.", sdg: "SDG 3: Good Health and Well-Being", problem: "Poor nutrition and unhealthy lifestyles affect health.", activity: "Healthy meal planning and lung model making.", task: "<b>Notice:</b> Observe eating/exercise habits.<br><b>Think:</b> Analyze health effects.<br><b>Act:</b> Practice healthy eating for one week.", output: "Health campaign poster", reflection: "How can healthy habits improve your body systems?" },
+                    { q: "Q2", topic: "Ecosystems and Food Chains", goal: "Explain relationships among organisms.", sdg: "SDG 15: Life on Land", problem: "Human activities damage ecosystems.", activity: "Food web creation and ecosystem mapping.", task: "<b>Notice:</b> Observe living organisms nearby.<br><b>Think:</b> Discuss food chain balance.<br><b>Act:</b> Participate in a mini clean-up drive.", output: "Food web diagram", reflection: "Why is every organism important in an ecosystem?" },
+                    { q: "Q3", topic: "Heat and Energy", goal: "Describe sources and uses of energy.", sdg: "SDG 7: Affordable and Clean Energy", problem: "Excessive energy use harms the environment.", activity: "Solar cooker demo and heat experiments.", task: "<b>Notice:</b> Observe electricity use.<br><b>Think:</b> Identify energy waste loops.<br><b>Act:</b> Save electricity for one week.", output: "Energy-saving checklist", reflection: "How can conserving energy help the planet?" },
+                    { q: "Q4", topic: "Weather Disturbances", goal: "Identify types of weather disturbances and safety measures.", sdg: "SDG 13: Climate Action", problem: "Typhoons and disasters affect communities.", activity: "Disaster preparedness planning and simulations.", task: "<b>Notice:</b> Observe local disaster risks.<br><b>Think:</b> Discuss readiness strategies.<br><b>Act:</b> Prepare an emergency kit with family.", output: "Preparedness plan", reflection: "Why is disaster preparedness important?" }
+                ],
+                "Grade 5": [
+                    { q: "Q1", topic: "Reproductive System", goal: "Understand body changes and health awareness.", sdg: "SDG 3: Good Health and Well-Being", problem: "Lack of health awareness may lead to unhealthy practices.", activity: "Health discussion and awareness poster.", task: "<b>Notice:</b> Observe respectful behaviors.<br><b>Think:</b> Discuss body care and boundaries.<br><b>Act:</b> Practice one healthy habit consistently.", output: "Reflection journal", reflection: "Why is respecting our body important?" },
+                    { q: "Q2", topic: "Matter and Its Changes", goal: "Explain physical and chemical changes in matter.", sdg: "SDG 12: Responsible Consumption & Production", problem: "Improper waste disposal increases pollution.", activity: "Recycling experiment and waste audit.", task: "<b>Notice:</b> Observe waste at home.<br><b>Think:</b> Analyze segregation frameworks.<br><b>Act:</b> Reduce single-use plastic for one week.", output: "Waste audit report", reflection: "How can reducing waste help communities?" },
+                    { q: "Q3", topic: "Soil Erosion and Conservation", goal: "Describe causes and effects of soil erosion.", sdg: "SDG 15: Life on Land", problem: "Soil erosion damages farms and communities.", activity: "Soil investigation and tree planting.", task: "<b>Notice:</b> Observe structural soil damage areas.<br><b>Think:</b> Identify causes of erosion.<br><b>Act:</b> Plant vegetation or promote soil protection.", output: "Conservation poster", reflection: "How can people protect the land?" },
+                    { q: "Q4", topic: "Electricity and Circuits", goal: "Build simple electrical circuits.", sdg: "SDG 7: Affordable and Clean Energy", problem: "Energy waste increases environmental problems.", activity: "Circuit building & energy-saving campaign.", task: "<b>Notice:</b> Observe electrical usage lines.<br><b>Think:</b> Analyze unnecessary power bleed.<br><b>Act:</b> Practice turning off unused appliances.", output: "Circuit model", reflection: "How can responsible electricity use help society?" }
+                ],
+                "Grade 6": [
+                    { q: "Q1", topic: "Nervous System", goal: "Explain functions of the nervous system and mental wellness.", sdg: "SDG 3: Good Health and Well-Being", problem: "Stress and unhealthy habits affect wellness.", activity: "Stress management and infographic making.", task: "<b>Notice:</b> Observe key stress triggers.<br><b>Think:</b> Discuss effects of stress on body systems.<br><b>Act:</b> Apply management techniques for a week.", output: "Wellness journal", reflection: "How can managing stress improve daily life?" },
+                    { q: "Q2", topic: "Mixtures and Solutions", goal: "Differentiate mixtures and solutions.", sdg: "SDG 6: Clean Water and Sanitation", problem: "Water contamination affects community health.", activity: "Water filtration experiment & investigation.", task: "<b>Notice:</b> Observe water use & safety markers.<br><b>Think:</b> Discuss core water pollution causes.<br><b>Act:</b> Promote household water conservation.", output: "Filtration model", reflection: "Why is clean water essential?" },
+                    { q: "Q3", topic: "Earthquakes and Volcanoes", goal: "Explain causes and effects of natural hazards.", sdg: "SDG 11: Sustainable Cities & Communities", problem: "Communities are vulnerable to structural earthquakes and eruptions.", activity: "Hazard mapping and disaster drills.", task: "<b>Notice:</b> Identify localized hazard-prone areas.<br><b>Think:</b> Analyze disaster structural risks.<br><b>Act:</b> Create family emergency protocols.", output: "Hazard map", reflection: "How can preparedness save lives?" },
+                    { q: "Q4", topic: "Environmental Conservation", goal: "Demonstrate ways to conserve the environment.", sdg: "SDG 13: Climate Action", problem: "Pollution and climate change disrupt native local ecosystems.", activity: "Community clean-up and advocacy campaign.", task: "<b>Notice:</b> Observe immediate area eco issues.<br><b>Think:</b> Trace root causes of pollution.<br><b>Act:</b> Lead a one-week target conservation rule.", output: "Advocacy materials", reflection: "What action can you continue after this lesson?" }
+                ],
+                "Grade 7": [{ q: "Q1", topic: "Scientific Investigation", goal: "Apply scientific methods in solving problems.", sdg: "SDG 4: Quality Education", problem: "Communities need evidence-based solutions.", activity: "Experiment design and data gathering.", task: "<b>Notice:</b> Observe local issue context.<br><b>Think:</b> Investigate causes with data rules.<br><b>Act:</b> Propose a simple science solution plan.", output: "Investigation report", reflection: "How can scientific thinking improve communities?" },
+                            { q: "Q2", topic: "Ecosystems and Biodiversity", goal: "Explain biodiversity and ecosystem balance.", sdg: "SDG 15: Life on Land", problem: "Human activities threaten global biodiversity networks.", activity: "Biodiversity inventory & awareness campaign.", task: "<b>Notice:</b> Track regional biodiversity loss.<br><b>Think:</b> Analyze localized human footprints.<br><b>Act:</b> Advocate for local habitat protection.", output: "Campaign materials", reflection: "Why should biodiversity be protected?" },
+                            { q: "Q3", topic: "Motion and Forces", goal: "Analyze motion and the effects of forces.", sdg: "SDG 9: Industry, Innovation & Infrastructure", problem: "Transportation and infrastructure issues burden society.", activity: "Engineering challenge and prototype activity.", task: "<b>Notice:</b> Observe systemic transit blocks.<br><b>Think:</b> Analyze how kinetic motion impacts design.<br><b>Act:</b> Create an innovative model prototype.", output: "Prototype presentation", reflection: "How can innovation solve daily problems?" },
+                            { q: "Q4", topic: "Heat and Energy Transfer", goal: "Explain energy transfer and conservation.", sdg: "SDG 7: Affordable and Clean Energy", problem: "Energy shortages and systemic pollution burden urban centers.", activity: "Renewable energy research & experiments.", task: "<b>Notice:</b> Monitor system energy consumption metrics.<br><b>Think:</b> Compare renewable vs non-renewable efficiency.<br><b>Act:</b> Build system conservation routines.", output: "Research presentation", reflection: "Why is renewable energy important for the future?" }],
+                "Grade 8": [{ q: "Q1", topic: "Cell Division and Genetics", goal: "Explain heredity and genetics concepts.", sdg: "SDG 3: Good Health and Well-Being", problem: "Genetic conditions and wellness issues strain families.", activity: "Family traits survey and infographic production.", task: "<b>Notice:</b> Observe cross-generation traits.<br><b>Think:</b> Discuss genetics in relation to modern healthcare.<br><b>Act:</b> Launch physical lifestyle health awareness drive.", output: "Genetics infographic", reflection: "How can genetics help improve healthcare?" },
+                            { q: "Q2", topic: "Chemical Reactions", goal: "Identify chemical reactions and applications.", sdg: "SDG 12: Responsible Consumption & Production", problem: "Unregulated hazardous chemical usage pollutes systems.", activity: "Laboratory investigation & product analysis.", task: "<b>Notice:</b> Catalog daily chemical agents used.<br><b>Think:</b> Track ecological footprint pipelines.<br><b>Act:</b> Substitute hazardous household chemicals.", output: "Investigation report", reflection: "How can responsible chemical use protect the environment?" },
+                            { q: "Q3", topic: "Typhoons and Climate Systems", goal: "Explain climate systems and disaster readiness.", sdg: "SDG 13: Climate Action", problem: "Climate adaptation lag intensifies typhoon disasters.", activity: "Community interview and preparedness vlog.", task: "<b>Notice:</b> Note climate-intensified flash points.<br><b>Think:</b> Map community structural risks.<br><b>Act:</b> Circulate readiness info resources.", output: "Awareness vlog", reflection: "How can climate awareness reduce disaster risks?" },
+                            { q: "Q4", topic: "Light and Sound", goal: "Explain properties and uses of light and sound.", sdg: "SDG 9: Industry, Innovation & Infrastructure", problem: "Digital communication access gaps isolate regions.", activity: "Sound mechanics test & technology report.", task: "<b>Notice:</b> Map out communication wave signals daily.<br><b>Think:</b> Analyze waves in high tech infrastructure.<br><b>Act:</b> Build simplified communication receiver prototypes.", output: "Technology presentation", reflection: "How do light and sound improve communication?" }],
+                "Grade 9": [{ q: "Q1", topic: "Respiratory and Circulatory System", goal: "Explain how lifestyle affects body systems.", sdg: "SDG 3: Good Health and Well-Being", problem: "Poor personal lifestyle tracks increase cardiovascular risk factors.", activity: "Biometric health log and fitness program design.", task: "<b>Notice:</b> Audit personal daily habits.<br><b>Think:</b> Link choices to visceral biological response.<br><b>Act:</b> Execute strict fitness timeline for one week.", output: "Health journal", reflection: "How can lifestyle choices improve health?" },
+                            { q: "Q2", topic: "Biodiversity and Evolution", goal: "Explain evolution and biodiversity conservation.", sdg: "SDG 15: Life on Land", problem: "Accelerated species extinction rates destabilize biology webs.", activity: "Species research and targeted conservation proposal.", task: "<b>Notice:</b> Identify localized regional endangered lists.<br><b>Think:</b> Track environmental habitat shrinkage indicators.<br><b>Act:</b> Launch community targeted conservation flyers.", output: "Conservation proposal", reflection: "Why should endangered species be protected?" },
+                            { q: "Q3", topic: "Electricity and Magnetism", goal: "Explain principles of electricity and magnetism.", sdg: "SDG 7: Affordable and Clean Energy", problem: "Power generation limits isolate remote development clusters.", activity: "Alternative induction model testing and research.", task: "<b>Notice:</b> Track power source failures locally.<br><b>Think:</b> Evaluate induction alternatives for energy.<br><b>Act:</b> Propose optimized resource consumption guides.", output: "Prototype model", reflection: "How can science improve energy access?" },
+                            { q: "Q4", topic: "Climate Change and Sustainability", goal: "Analyze causes and effects of climate change.", sdg: "SDG 13: Climate Action", problem: "Global climate variability causes ecosystem structural degradation.", activity: "Personal carbon calculation and campaigns.", task: "<b>Notice:</b> Calculate baseline individual emissions footprint.<br><b>Think:</b> Break down industrial value chains.<br><b>Act:</b> Run a 1-week carbon drop routine protocol.", output: "Sustainability action plan", reflection: "What sustainable habits can you continue daily?" }],
+                "Grade 10": [{ q: "Q1", topic: "DNA and Biotechnology", goal: "Explain applications and ethics of biotechnology.", sdg: "SDG 3: Good Health and Well-Being", problem: "Bio-ethical considerations challenge tech innovation boundaries.", activity: "Biotechnology debate and deep analysis brief.", task: "<b>Notice:</b> Track genetic applications in farming/medicine.<br><b>Think:</b> Balance production yields with ethics loops.<br><b>Act:</b> Run awareness modules on biotech parameters.", output: "Debate presentation", reflection: "How can biotechnology improve lives responsibly?" },
+                            { q: "Q2", topic: "Ecosystem Stability and Human Impact", goal: "Analyze human impact on ecosystems.", sdg: "SDG 15: Life on Land", problem: "Industrial pollutants runoffs damage ecological stability.", activity: "Case study documentation and bio mapping.", task: "<b>Notice:</b> Monitor visible local ecological structural disruptions.<br><b>Think:</b> Measure restoration timeline paths.<br><b>Act:</b> Organize structural cleanup activities.", output: "Case study report", reflection: "How can communities restore ecosystems?" },
+                            { q: "Q3", topic: "Plate Tectonics and Natural Hazards", goal: "Explain plate tectonics and disaster risk reduction.", sdg: "SDG 11: Sustainable Cities & Communities", problem: "Tectonic line vulnerabilities threaten real estate & lives.", activity: "Regional risk auditing and mock response tests.", task: "<b>Notice:</b> Map terrain faults and safe zoning spots.<br><b>Think:</b> Isolate weak public infrastructure items.<br><b>Act:</b> Formulate disaster reaction manuals.", output: "Preparedness proposal", reflection: "Why should communities prepare for disasters?" },
+                            { q: "Q4", topic: "Global Environmental Issues", goal: "Evaluate global environmental challenges and solutions.", sdg: "SDG 13: Climate Action", problem: "Cross-border environment damage endangers future generation assets.", activity: "Global sustainability mock simulation summit.", task: "<b>Notice:</b> Monitor international eco treaties via media channels.<br><b>Think:</b> Match global targets to regional systems.<br><b>Act:</b> Adopt permanent eco habit tracking plans.", output: "Awareness campaign or video", reflection: "How can students become active global citizens?" }]
+            },
+            english: {
+                "Grade 1": [
+                    { q: "Q1", topic: "Sharing About Family Through Symbols/Words", goal: "Express ideas about family using simple words and symbols.", sdg: "SDG 4: Quality Education", problem: "Some children struggle to express appreciation for their families.", activity: "Family collage and show-and-tell activity.", task: "<b>Notice:</b> Observe family helping behaviors.<br><b>Think:</b> Discuss why family systems are vital.<br><b>Act:</b> Assist one family member daily for one week.", output: "Family collage and oral sharing", reflection: "How can showing appreciation strengthen families?" },
+                    { q: "Q2", topic: "Listening and Following Directions", goal: "Demonstrate active listening and follow instructions correctly.", sdg: "SDG 16: Peace, Justice, & Strong Institutions", problem: "Miscommunication leads to unnecessary friction and conflicts.", activity: "Listening games and situational role play.", task: "<b>Notice:</b> Note where clear directions matter.<br><b>Think:</b> Map out mistakes caused by poor focus.<br><b>Act:</b> Run active listening checks for a week.", output: "Listening checklist", reflection: "How does listening help build peaceful relationships?" },
+                    { q: "Q3", topic: "Describing People and Places", goal: "Use descriptive words for people and surroundings.", sdg: "SDG 10: Reduced Inequalities", problem: "Individuals face systemic exclusion due to social bias.", activity: "Picture description and vocabulary tracking.", task: "<b>Notice:</b> Observe diversity parameters around you.<br><b>Think:</b> Debate the impact of inclusive values.<br><b>Act:</b> Initiate proactive peer socialization actions.", output: "Descriptive paragraph or poster", reflection: "How can kind words make others feel included?" },
+                    { q: "Q4", topic: "Storytelling and Simple Narratives", goal: "Retell simple stories and identify lessons learned.", sdg: "SDG 4: Quality Education", problem: "Students run into confidence issues when narrating.", activity: "Puppet theater and narrative sequencing.", task: "<b>Notice:</b> Identify moral lessons inside folklore texts.<br><b>Think:</b> Translate text situations to real life.<br><b>Act:</b> Share target narrative themes with family loops.", output: "Story retelling performance", reflection: "What lesson from a story can help you in real life?" }
+                ],
+                "Grade 2": [
+                    { q: "Q1", topic: "Myself and My Family", goal: "Write and speak about family experiences clearly.", sdg: "SDG 3: Good Health and Well-Being", problem: "Fragmented home discussion structures limit wellness bonds.", activity: "Journal logging and interactive family interviews.", task: "<b>Notice:</b> Observe patterns of family wellness links.<br><b>Think:</b> Evaluate tracking emotional balance at home.<br><b>Act:</b> Spend dedicated quality time with family.", output: "Reflection journal", reflection: "How can families support healthy living?" },
+                    { q: "Q2", topic: "School and Community", goal: "Describe roles of people in school and community.", sdg: "SDG 11: Sustainable Cities & Communities", problem: "Lack of civic pride drives public non-cooperation loops.", activity: "Civic mapping tracking and campaign visual sets.", task: "<b>Notice:</b> Pinpoint core requirements in neighborhoods.<br><b>Think:</b> Detail the structural jobs of area organizers.<br><b>Act:</b> Join a public cleanup block effort.", output: "Community poster", reflection: "How can children help make communities better?" },
+                    { q: "Q3", topic: "Community Helpers", goal: "Identify community helpers and their contributions.", sdg: "SDG 8: Decent Work & Economic Growth", problem: "Essential local labor forces face continuous social disregard.", activity: "Career exploration days and letter writing tasks.", task: "<b>Notice:</b> Track neighborhood logistics workers at work.<br><b>Think:</b> Imagine business flow lines without labor helpers.<br><b>Act:</b> Send handwritten thank-you cards to workers.", output: "Thank-you letters", reflection: "Why should we appreciate community helpers?" },
+                    { q: "Q4", topic: "Caring for Nature Through Stories", goal: "Understand environmental care through literature.", sdg: "SDG 15: Life on Land", problem: "Environmental apathy allows heavy litter pipelines to exist.", activity: "Eco poetry reading and nature character writing.", task: "<b>Notice:</b> Track garbage hotspots near natural features.<br><b>Think:</b> Relate eco-literature themes to reality.<br><b>Act:</b> Set up rigid sorted waste bins in rooms.", output: "Nature-themed story or poem", reflection: "How can stories inspire environmental care?" }
+                ],
+                "Grade 3": [
+                    { q: "Q1", topic: "Regional Stories and Traditions", goal: "Appreciate local stories and cultural traditions.", sdg: "SDG 11: Sustainable Cities & Communities", problem: "Globalization waves threaten to wash out distinct culture assets.", activity: "Folklore theatrical runs and heritage design.", task: "<b>Notice:</b> Observe oral folklore told at home base.<br><b>Think:</b> Discuss values encoded within traditions.<br><b>Act:</b> Record a traditional fable to tell peers.", output: "Heritage poster", reflection: "Why should traditions be preserved?" },
+                    { q: "Q2", topic: "Informational Texts and Procedures", goal: "Read and follow informational and procedural texts.", sdg: "SDG 4: Quality Education", problem: "Failing to comprehend guides causes industrial errors.", activity: "Technical step-by-step drafting and tests.", task: "<b>Notice:</b> Audit step sequences on utility items.<br><b>Think:</b> Analyze errors stemming from bad manuals.<br><b>Act:</b> Create an accessible assembly guide asset.", output: "Instructional guide", reflection: "How does clear communication help people?" },
+                    { q: "Q3", topic: "National Themes and Filipino Identity", goal: "Express pride in Filipino identity and values.", sdg: "SDG 16: Peace, Justice, & Strong Institutions", problem: "Faded civic unity fragments modern national progress tracks.", activity: "Civic values essay building and speech runs.", task: "<b>Notice:</b> Trace native helpful values like Bayanihan around.<br><b>Think:</b> Connect civic alignment with community order.<br><b>Act:</b> Build a localized community value project rule.", output: "Essay or poster campaign", reflection: "How can students help strengthen the nation?" },
+                    { q: "Q4", topic: "Poems and Creative Expression", goal: "Create poems that express feelings and ideas.", sdg: "SDG 10: Reduced Inequalities", problem: "Vulnerable youth feel their views are muted.", activity: "Rhyme assembly lines and spoken expression showcases.", task: "<b>Notice:</b> Listen to hidden socio-emotional themes around.<br><b>Think:</b> Explore art as an inclusive tool for outcasts.<br><b>Act:</b> Produce inspiring lyrical notes to motivate peers.", output: "Spoken poetry presentation", reflection: "How can creativity inspire positive change?" }
+                ],
+                "Grade 4": [
+                    { q: "Q1", topic: "Narrative and Informational Texts", goal: "Analyze stories and informational texts critically.", sdg: "SDG 4: Quality Education", problem: "Weak operational reading limits downstream training tracks.", activity: "Group reading circle reviews and structural logging.", task: "<b>Notice:</b> Highlight unfamiliar complex concepts in literature.<br><b>Think:</b> Trace how structured insights guide personal logic.<br><b>Act:</b> Run a basic tutorial read module for toddlers.", output: "Reading response journal", reflection: "How does reading help people grow?" },
+                    { q: "Q2", topic: "Friendly Letters and Communication", goal: "Write respectful and meaningful messages.", sdg: "SDG 16: Peace, Justice, & Strong Institutions", problem: "Aggressive message structures pollute modern interactions.", activity: "Polite composition tasks and cross-evaluations.", task: "<b>Notice:</b> Review aggressive or impolite wording triggers.<br><b>Think:</b> Trace how calm layout logic repairs community splits.<br><b>Act:</b> Dispatch gratitude notes to support team peers.", output: "Friendly letter", reflection: "How can respectful communication solve conflicts?" },
+                    { q: "Q3", topic: "Culture-Specific Texts", goal: "Understand cultural identity through texts.", sdg: "SDG 11: Sustainable Cities & Communities", problem: "Youth disconnect leaves ancient identity markers abandoned.", activity: "Intergenerational historical review interviews.", task: "<b>Notice:</b> Record unique idioms from elderly relatives.<br><b>Think:</b> Study how text keeps custom lines functional.<br><b>Act:</b> Organize a digital collection display of heritage notes.", output: "Multimedia presentation", reflection: "What can students do to preserve culture?" },
+                    { q: "Q4", topic: "Visual and Multimedia Texts", goal: "Interpret and create visual texts effectively.", sdg: "SDG 9: Industry, Innovation & Infrastructure", problem: "Deceptive visual layouts accelerate information corruption online.", activity: "Ad breakdown reviews and visual information layout creation.", task: "<b>Notice:</b> Break down graphic components of trending online ads.<br><b>Think:</b> Uncover hidden psychological hooks in graphics.<br><b>Act:</b> Generate an accurate community public info diagram.", output: "Infographic or digital story", reflection: "How can visuals influence people responsibly?" }
+                ],
+                "Grade 5": [
+                    { q: "Q1", topic: "Literary and Informational Texts", goal: "Compare literary and factual texts critically.", sdg: "SDG 4: Quality Education", problem: "Many learners struggle to identify reliable information.", activity: "Book review and reading journal.", task: "<b>Notice:</b> Observe how texts shape opinions.<br><b>Think:</b> Discuss reliable and unreliable information.<br><b>Act:</b> Share one useful reading material with others.", output: "Reading journal or review", reflection: "How can reading help people make wise decisions?" },
+                    { q: "Q2", topic: "Persuasive Writing", goal: "Write persuasive texts for advocacy and awareness.", sdg: "SDG 13: Climate Action", problem: "Environmental problems continue due to lack of awareness.", activity: "Advocacy letter and persuasive speech.", task: "<b>Notice:</b> Observe environmental issues nearby.<br><b>Think:</b> Analyze causes and possible solutions.<br><b>Act:</b> Promote one eco-friendly practice for one week.", output: "Persuasive campaign material", reflection: "How can writing encourage people to act?" },
+                    { q: "Q3", topic: "Multimedia and Visual Literacy", goal: "Analyze and create multimedia content responsibly.", sdg: "SDG 9: Industry, Innovation & Infrastructure", problem: "Misleading online content affects decision-making.", activity: "Video analysis and digital poster making.", task: "<b>Notice:</b> Observe messages from media and advertisements.<br><b>Think:</b> Discuss how media affects choices.<br><b>Act:</b> Create responsible digital content.", output: "Multimedia presentation", reflection: "Why should people think critically about media?" },
+                    { q: "Q4", topic: "Research and Reporting", goal: "Conduct simple research and present findings clearly.", sdg: "SDG 4: Quality Education", problem: "Lack of research skills can spread misinformation.", activity: "Interview activity and oral reporting.", task: "<b>Notice:</b> Observe questions or issues in the community.<br><b>Think:</b> Research causes and facts.<br><b>Act:</b> Share accurate information with others.", output: "Research report", reflection: "How can research help solve problems?" }
+                ],
+                "Grade 6": [
+                    { q: "Q1", topic: "Narrative and Expository Writing", goal: "Write organized narratives and explanatory texts.", sdg: "SDG 4: Quality Education", problem: "Poor communication may lead to misunderstandings.", activity: "Essay writing and reflection journal.", task: "<b>Notice:</b> Observe situations needing clear communication.<br><b>Think:</b> Analyze effective writing techniques.<br><b>Act:</b> Write a meaningful story or reflection to inspire others.", output: "Essay or narrative composition", reflection: "How can writing influence people positively?" },
+                    { q: "Q2", topic: "Persuasive and Multimedia Texts", goal: "Evaluate persuasive techniques in media and texts.", sdg: "SDG 16: Peace, Justice, & Strong Institutions", problem: "False and harmful information spreads easily online.", activity: "Debate and multimedia campaign.", task: "<b>Notice:</b> Observe persuasive messages in media.<br><b>Think:</b> Analyze truthfulness and fairness.<br><b>Act:</b> Share responsible and truthful messages online.", output: "Multimedia advocacy material", reflection: "Why should media communication be ethical?" },
+                    { q: "Q3", topic: "Critical Reading and Analysis", goal: "Analyze texts using critical thinking skills.", sdg: "SDG 10: Reduced Inequalities", problem: "Bias and misinformation create misunderstanding among people.", activity: "News analysis and opinion writing.", task: "<b>Notice:</b> Observe different perspectives in news/articles.<br><b>Think:</b> Discuss fairness and evidence.<br><b>Act:</b> Practice respectful discussion for one week.", output: "Critical analysis essay", reflection: "Why is critical thinking important in society?" },
+                    { q: "Q4", topic: "Culture-Based Texts", goal: "Appreciate cultural identity through literature.", sdg: "SDG 11: Sustainable Cities & Communities", problem: "Younger generations may lose appreciation for traditions.", activity: "Cultural storytelling and documentary viewing.", task: "<b>Notice:</b> Observe cultural practices in the community.<br><b>Think:</b> Discuss importance of preserving traditions.<br><b>Act:</b> Share cultural stories or practices with others.", output: "Cultural blog or presentation", reflection: "How can literature preserve culture?" }
+                ],
+                "Grade 7": [{ q: "Q1", topic: "Literary Texts and Personal Narratives", goal: "Express emotions and experiences through narratives.", sdg: "SDG 3: Good Health and Well-Being", problem: "Many young people struggle to express emotions healthily.", activity: "Reflective journal and podcast recording.", task: "<b>Notice:</b> Track socio-emotional shifts daily.<br><b>Think:</b> Explore writing text forms to stabilize personal logic loops.<br><b>Act:</b> Broadcast peer-motivating audio journals.", output: "Personal narrative or podcast", reflection: "How can storytelling support mental wellness?" },
+                            { q: "Q2", topic: "Informational and Expository Texts", goal: "Analyze informational texts critically.", sdg: "SDG 4: Quality Education", problem: "Data tracking failures lead down bad choices pipelines.", activity: "Infographic creation and source auditing runs.", task: "<b>Notice:</b> Run validity checks on mainstream items read.<br><b>Think:</b> Determine specific editorial motives.<br><b>Act:</b> Publish data validation lists to class loops.", output: "Infographic presentation", reflection: "Why is checking information important?" },
+                            { q: "Q3", topic: "Media and Information Literacy", goal: "Evaluate media messages critically and responsibly.", sdg: "SDG 16: Peace, Justice, & Strong Institutions", problem: "Weaponized systemic fake news tears communities apart.", activity: "Disinformation tracing tasks & advocacy runs.", task: "<b>Notice:</b> Capture instances of link-bait titles online.<br><b>Think:</b> Uncover panic creation mechanisms in text structures.<br><b>Act:</b> Maintain zero-verification sharing drops for a week.", output: "Media awareness campaign", reflection: "How can students become responsible media users?" },
+                            { q: "Q4", topic: "Creative Writing", goal: "Use creative writing to express ideas and empathy.", sdg: "SDG 10: Reduced Inequalities", problem: "Systemic discrimination isolates ethnic/marginal voices.", activity: "Empathy story creation and slam poetry text blocks.", task: "<b>Notice:</b> Locate systemic socioeconomic exclusion signs nearby.<br><b>Think:</b> Process the role of language in creating inclusion templates.<br><b>Act:</b> Author character profiles highlighting marginal voices.", output: "Creative writing portfolio", reflection: "How can literature promote empathy?" }],
+                "Grade 8": [{ q: "Q1", topic: "Literary Analysis", goal: "Analyze literary texts and social themes.", sdg: "SDG 5: Gender Equality", problem: "Entrenched gender biases limit career pathways for youth.", activity: "Structural character audits & round-table setups.", task: "<b>Notice:</b> Log classic systemic stereotyping inside modern scripts.<br><b>Think:</b> Track the impact of narrative models on local identity paths.<br><b>Act:</b> Generate text reviews promoting gender neutrality rules.", output: "Literary reflection", reflection: "How can literature challenge stereotypes?" },
+                            { q: "Q2", topic: "Argumentative Texts", goal: "Construct evidence-based arguments respectfully.", sdg: "SDG 16: Peace, Justice, & Strong Institutions", problem: "Shouting loops replace logical debate platforms in civic spaces.", activity: "Evidence construction loops & position briefs.", task: "<b>Notice:</b> Capture cognitive gaps in casual social arguments.<br><b>Think:</b> Map out formatting components of evidence assets.<br><b>Act:</b> Use non-aggressive debate structures during team interactions.", output: "Position paper", reflection: "Why is respectful argument important?" },
+                            { q: "Q3", topic: "Multimedia Communication", goal: "Create responsible multimedia content.", sdg: "SDG 9: Industry, Innovation & Infrastructure", problem: "Reckless digital communication leaves permanent social damage logs.", activity: "Vlog production pipelines and distribution edits.", task: "<b>Notice:</b> Trace digital toxicity triggers in online comment streams.<br><b>Think:</b> Design text frameworks that reduce polarization traits.<br><b>Act:</b> Deploy a targeted structural civic info video.", output: "Podcast or vlog", reflection: "How can digital communication influence society?" },
+                            { q: "Q4", topic: "Research-Based Writing", goal: "Conduct research using reliable evidence.", sdg: "SDG 4: Quality Education", problem: "Public confusion grows when unverified data hits feeds.", activity: "Factual text collation and data reporting tasks.", task: "<b>Notice:</b> Spot gaps in generalized public assertions nearby.<br><b>Think:</b> Test the integrity of quantitative sources.<br><b>Act:</b> Deliver an objective evidence folder on local parameters.", output: "Research report", reflection: "How can research support informed decisions?" }],
+                "Grade 9": [{ q: "Q1", topic: "Literary Texts and One-Act Plays", goal: "Analyze drama and perform literary texts.", sdg: "SDG 16: Peace, Justice, & Strong Institutions", problem: "Deep socio-cultural gaps breed community misunderstandings.", activity: "Script development workflows and kinetic theater exercises.", task: "<b>Notice:</b> Map interpersonal tension lines inside read texts.<br><b>Think:</b> Discover perspective switching dynamics via dramatic setups.<br><b>Act:</b> Stage an original brief scene advocating public coordination.", output: "One-act play performance", reflection: "How can drama inspire empathy and change?" },
+                            { q: "Q2", topic: "Argumentative and Informational Texts", goal: "Write evidence-based arguments on social issues.", sdg: "SDG 13: Climate Action", problem: "Public environmental inaction continues due to abstract messaging.", activity: "Eco documentary analytics and formal speech creation.", task: "<b>Notice:</b> Pinpoint flawed greenwashing arguments in industrial ads.<br><b>Think:</b> Design logical appeals linking policy changes to eco facts.<br><b>Act:</b> Present a formal climate adaptation thesis to school boards.", output: "Advocacy speech or paper", reflection: "How can students influence climate action?" },
+                            { q: "Q3", topic: "Journalism and Media Writing", goal: "Produce accurate and ethical journalistic texts.", sdg: "SDG 16: Peace, Justice, & Strong Institutions", problem: "Click-driven media algorithms compromise objective truth standards.", activity: "Investigative report writing & validation tasks.", task: "<b>Notice:</b> Scan local feeds for unverified rumor logs.<br><b>Think:</b> Analyze the structural ethics boundaries of journalism codes.<br><b>Act:</b> Curate an open-access factual community campus sheet.", output: "News article or newsletter", reflection: "Why is ethical journalism important?" },
+                            { q: "Q4", topic: "Multimedia Publishing", goal: "Publish multimedia texts responsibly.", sdg: "SDG 9: Industry, Innovation & Infrastructure", problem: "Digital networks are underutilized for positive community mobilization.", activity: "Web management tracking and structured media campaigns.", task: "<b>Notice:</b> Isolate missed opportunities for community problem-solving online.<br><b>Think:</b> Design digital assets optimized for social action conversions.<br><b>Act:</b> Launch an organic community-building digital asset cluster.", output: "Blog or awareness video", reflection: "How can multimedia inspire positive change?" }],
+                "Grade 10": [{ q: "Q1", topic: "Literary Criticism and Short Film", goal: "Critique literary works and films thoughtfully.", sdg: "SDG 10: Reduced Inequalities", problem: "Mainstream media frequently reinforces historic marginal class biases.", activity: "Cinematic structural deconstructions and review papers.", task: "<b>Notice:</b> Log underlying discriminatory visual tropes in film sets.<br><b>Think:</b> Measure how skewed representations limit real opportunities.<br><b>Act:</b> Format an alternative inclusive scenario treatment layout.", output: "Literary critique or short film", reflection: "How can films promote understanding?" },
+                            { q: "Q2", topic: "Documentaries and Vlogs", goal: "Create informative and advocacy-based media.", sdg: "SDG 13: Climate Action", problem: "Localized eco crises remain ignored without visual tracking.", activity: "Field video production workflows and digital optimization.", task: "<b>Notice:</b> Geotag active pollution parameters inside the local municipality.<br><b>Think:</b> Shape narrative tension arcs to force localized intervention.<br><b>Act:</b> Publish an interactive short field documentary asset.", output: "Documentary or vlog", reflection: "How can media inspire environmental action?" },
+                            { q: "Q3", topic: "Academic and Transactional Texts", goal: "Use formal communication effectively and ethically.", sdg: "SDG 4: Quality Education", problem: "Substandard technical formatting causes administrative logjams.", activity: "Proposal engineering setups and style optimization.", task: "<b>Notice:</b> Trace formatting deficiencies inside corporate request sheets.<br><b>Think:</b> Understand why structural precision ensures processing accuracy.<br><b>Act:</b> Produce an enterprise-grade grant acquisition layout package.", output: "Formal report or presentation", reflection: "Why is ethical communication important?" },
+                            { q: "Q4", topic: "Multimodal and Multimedia Texts", goal: "Create integrated multimedia texts responsibly.", sdg: "SDG 9: Industry, Innovation & Infrastructure", problem: "A widespread consumer-only stance fuels internet infrastructure waste.", activity: "Web development tasks and tracking portfolio setups.", task: "<b>Notice:</b> Audit web platform structural layout efficiencies.<br><b>Think:</b> Map out how technical tools scale social change blueprints.<br><b>Act:</b> Deploy an end-to-end open access educational web portal.", output: "Digital portfolio or campaign", reflection: "How can students become responsible digital citizens?" }]
+            },
+            math: {
+                "Grade 1": [
+                    { q: "Q1", topic: "Counting & Comparing Numbers", goal: "Develop number sense through counting.", sdg: "SDG 4: Quality Education", problem: "Low early numerical literacy hinders tracking growth.", activity: "Interactive spatial hunting tasks.", task: "<b>Notice:</b> Map visual numerical instances around home layouts.<br><b>Think:</b> Pinpoint why sorting objects prevents distribution errors.<br><b>Act:</b> Run daily physical object counting checks.", output: "Counting chart", reflection: "How do numbers help daily life?" },
+                    { q: "Q2", topic: "Addition & Subtraction", goal: "Solve simple problems using operations.", sdg: "SDG 1: No Poverty", problem: "Financial instability roots from deficient basic asset calculations.", activity: "Simulated micro-market exchange games.", task: "<b>Notice:</b> Monitor item cost units in small family transactions.<br><b>Think:</b> Study how tracking costs prevents asset depletion leaks.<br><b>Act:</b> Maintain a simplified personal savings safe grid.", output: "Budget drawing", reflection: "How does math help families?" },
+                    { q: "Q3", topic: "Shapes & Patterns", goal: "Identify and create patterns/shapes.", sdg: "SDG 9: Industry, Innovation & Infrastructure", problem: "Low spatial pattern identification delays design readiness.", activity: "Geometric artwork integration structures.", task: "<b>Notice:</b> Track repeating structural patterns in physical buildings.<br><b>Think:</b> Explore how geometric symmetry preserves material balance.<br><b>Act:</b> Assemble a balanced mosaic item out of scraps.", output: "Shape artwork", reflection: "Where do we see shapes in life?" },
+                    { q: "Q4", topic: "Measurement & Time", goal: "Understand time and routines.", sdg: "SDG 3: Good Health and Well-Being", problem: "Fragmented time utilization drives toxic habits.", activity: "Temporal timeline chart creations.", task: "<b>Notice:</b> Record hour time stamps spent on essential biological slots.<br><b>Think:</b> See how scheduled blocks reduce fatigue factors.<br><b>Act:</b> Follow a strict customized time block matrix.", output: "Routine chart", reflection: "Why is time important?" }
+                ],
+                "Grade 2": [
+                    { q: "Q1", topic: "Place Value", goal: "Understand number structure.", sdg: "SDG 4: Quality Education", problem: "Misreading multi-digit scaling misrepresents resource scope.", activity: "Positional values base mapping.", task: "<b>Notice:</b> Track multi-digit quantities mentioned in public stats.<br><b>Think:</b> Comprehend how position markers scale actual numbers.<br><b>Act:</b> Organize inventory counts using base-10 groupings.", output: "Place value chart", reflection: "Why understand numbers?" },
+                    { q: "Q2", topic: "Addition/Subtraction (Larger Numbers)", goal: "Solve multi-digit problems.", sdg: "SDG 8: Decent Work & Economic Growth", problem: "Poor transaction processing logic risks trade deficits.", activity: "Simulated store ledgers operations.", task: "<b>Notice:</b> Track input/output logs inside local micro-trade sites.<br><b>Think:</b> Analyze ledger balance logic to track financial stability.<br><b>Act:</b> Generate valid balance records for mini exchanges.", output: "Mock receipts", reflection: "How is math used in work?" },
+                    { q: "Q3", topic: "Basic Fractions", goal: "Understand equal sharing.", sdg: "SDG 2: Zero Hunger", problem: "Imbalanced resource division generates deep local conflicts.", activity: "Fractional geometric material splitting.", task: "<b>Notice:</b> Track resource unit portions divided at table points.<br><b>Think:</b> Evaluate mathematical fairness versus random splitting.<br><b>Act:</b> Construct precise symmetrical fraction models for assets.", output: "Fraction model", reflection: "Why is fair sharing important?" },
+                    { q: "Q4", topic: "Data & Graphs", goal: "Collect and interpret data.", sdg: "SDG 3: Good Health and Well-Being", problem: "Hidden healthcare trends remain undetected without graphs.", activity: "Metric monitoring surveys and chart plots.", task: "<b>Notice:</b> Monitor physical symptom types among a sample set.<br><b>Think:</b> Uncover trends by converting raw logs to graphs.<br><b>Act:</b> Construct clean operational visual chart reports.", output: "Bar graph", reflection: "How do graphs help health?" }
+                ],
+                "Grade 3": [
+                    { q: "Q1", topic: "Multiplication & Division", goal: "Understand grouping & sharing.", sdg: "SDG 8: Decent Work & Economic Growth", problem: "Inefficient scaling models bottleneck agricultural trade flows.", activity: "Market distribution simulation grids.", task: "<b>Notice:</b> Observe bulk packing array setups inside cargo sites.<br><b>Think:</b> Map out how grid division minimizes shipping waste loops.<br><b>Act:</b> Draft high-efficiency batch packaging blueprint grids.", output: "Product list", reflection: "How does math help business?" },
+                    { q: "Q2", topic: "Money & Financial Literacy", goal: "Manage money basics.", sdg: "SDG 1: No Poverty", problem: "Untracked consumer spending patterns perpetuate poverty traps.", activity: "Personal tracking asset design models.", task: "<b>Notice:</b> Itemize disposable cash spent on unnecessary goods.<br><b>Think:</b> Model compound decay in capital caused by impulse luxury buying.<br><b>Act:</b> Run a zero-leak daily savings balance tracking record.", output: "Savings chart", reflection: "Why should people save?" },
+                    { q: "Q3", topic: "Geometry & Symmetry", goal: "Recognize shapes in environment.", sdg: "SDG 9: Industry, Innovation & Infrastructure", problem: "Asymmetrical structures cause regular mechanical item failures.", activity: "Architectural line assessment tasks.", task: "<b>Notice:</b> Trace structural force lines inside bridges/trusses.<br><b>Think:</b> Connect symmetrical load distribution with long-term safety.<br><b>Act:</b> Design a perfectly balanced truss frame layout template.", output: "Symmetry art", reflection: "How is geometry used in life?" },
+                    { q: "Q4", topic: "Measurement & Problem Solving", goal: "Apply measurement in real life.", sdg: "SDG 11: Sustainable Cities & Communities", problem: "Inaccurate spatial surveying compromises neighborhood layouts.", activity: "Spatial scaling and mapping operations.", task: "<b>Notice:</b> Check dimensions of public access routes nearby.<br><b>Think:</b> Track spatial bottlenecks generated by flawed dimensions.<br><b>Act:</b> Draft an optimized to-scale accessibility room model.", output: "Map sketch", reflection: "Why measure things?" }
+                ],
+                "Grade 4": [
+                    { q: "Q1", topic: "Whole Numbers Operations", goal: "Solve multi-step problems.", sdg: "SDG 4: Quality Education", problem: "Weak systematic thinking bottlenecks algorithmic problem mastery.", activity: "Strategic math puzzle solving labs.", task: "<b>Notice:</b> Identify operational dependencies in problem text blocks.<br><b>Think:</b> Isolate variable values step-by-step.<br><b>Act:</b> Resolve multi-step logic paths with verifiable proofs.", output: "Problem set", reflection: "How does math improve thinking?" },
+                    { q: "Q2", topic: "Fractions & Decimals", goal: "Apply fractions in daily life.", sdg: "SDG 2: Zero Hunger", problem: "Inaccurate recipe tracking generates extreme material waste vectors.", activity: "Micro-ingredient proportional scaling runs.", task: "<b>Notice:</b> Measure precise metric food weights across items.<br><b>Think:</b> Scale recipe fraction values according to client demands.<br><b>Act:</b> Produce zero-waste custom ingredient proportion sheets.", output: "Recipe sheet", reflection: "Why measure food properly?" },
+                    { q: "Q3", topic: "Perimeter & Area", goal: "Measure spaces accurately.", sdg: "SDG 11: Sustainable Cities & Communities", problem: "Flawed land perimeter tracking shrinks farming yield outputs.", activity: "Agricultural grid boundary calculation labs.", task: "<b>Notice:</b> Trace physical boundaries of local public land parcels.<br><b>Think:</b> Optimize space layout to maximize density values.<br><b>Act:</b> Design an efficient agricultural zoning square map.", output: "Floor plan", reflection: "Why plan spaces?" },
+                    { q: "Q4", topic: "Data Interpretation", goal: "Analyze information.", sdg: "SDG 3: Good Health and Well-Being", problem: "Illogical data reading leads down dangerous health routes.", activity: "Biometric status tracking tracking arrays.", task: "<b>Notice:</b> Collect variable pulse or hydration counts across subjects.<br><b>Think:</b> Detect critical anomalies using standard statistical bounds.<br><b>Act:</b> Author an objective descriptive diagnostic report sheet.", output: "Health report", reflection: "How does data improve health?" }
+                ],
+                "Grade 5": [
+                    { q: "Q1", topic: "Decimals & Percentages", goal: "Apply percent in real life.", sdg: "SDG 8: Decent Work & Economic Growth", problem: "Predatory interest rates exploit financially illiterate markets.", activity: "Amortization and price drop testing loops.", task: "<b>Notice:</b> Scan market price labels for hidden transaction values.<br><b>Think:</b> Compute net price savings vs real value drop weights.<br><b>Act:</b> Code a percentage deduction calculator layout guide.", output: "Discount sheet", reflection: "Why use percentages?" },
+                    { q: "Q2", topic: "Ratio & Proportion", goal: "Understand relationships.", sdg: "SDG 6: Clean Water and Sanitation", problem: "Disproportional fluid distribution drains local reserves.", activity: "Flow rate balancing calculation logs.", task: "<b>Notice:</b> Log baseline volume outputs from local faucets over time.<br><b>Think:</b> Calculate global fluid balance ratios needed per block.<br><b>Act:</b> Set up an optimized household water conservation tracker.", output: "Water log", reflection: "Why conserve water?" },
+                    { q: "Q3", topic: "Volume & Measurement", goal: "Measure capacity accurately.", sdg: "SDG 12: Responsible Consumption & Production", problem: "Over-sized product boxes cause excess plastic pollution.", activity: "Spatial volumetric box engineering.", task: "<b>Notice:</b> Measure air space gaps in typical commercial deliveries.<br><b>Think:</b> Design containers matching object surface area values.<br><b>Act:</b> Engineer high-efficiency low-waste shipping box skins.", output: "Model package", reflection: "How reduce waste?" },
+                    { q: "Q4", topic: "Statistics & Probability", goal: "Interpret and predict data.", sdg: "SDG 3: Good Health and Well-Being", problem: "Poor risk tracking leaves groups open to infectious vectors.", activity: "Probability hazard analysis spreadsheets.", task: "<b>Notice:</b> Track historical local infection data variables.<br><b>Think:</b> Project systemic transmission risks mathematically.<br><b>Act:</b> Generate an objective environmental hazard evaluation summary.", output: "Survey report", reflection: "How does data help decisions?" }
+                ],
+                "Grade 6": [
+                    { q: "Algebraic Expressions", topic: "Model real situations mathematically", goal: "Create variable functions based on patterns.", sdg: "SDG 9: Industry, Innovation & Infrastructure", problem: "Rigid non-algebraic planning fails under resource shifts.", activity: "Dynamic algorithm and variable structural tracking.", task: "<b>Observe:</b> Identify numeric trend structures in material usage loops.<br><b>Analyze:</b> Map steady rate rules to basic algebraic functions.<br><b>Act:</b> Write an optimization equation template sheet.", output: "Equation model", reflection: "How does math solve problems?" }
+                ],
+                "Grade 7": [
+                    { q: "Linear Equations", topic: "Solve real-life financial problems", goal: "Apply linear algebra structures to clear asset debts.", sdg: "SDG 8: Decent Work & Economic Growth", problem: "Chaotic cost projections drop start-up ventures into collapse.", activity: "Linear investment and break-even point modeling.", task: "<b>Notice:</b> Itemize operational fixed overhead lines vs variable fees.<br><b>Think:</b> Locate exact cross-over break-even calculation markers.<br><b>Act:</b> Produce an automated linear accounting workbook blueprint.", output: "Budget sheet", reflection: "How does math help money management?" }
+                ],
+                "Grade 8": [
+                    { q: "Linear Functions", topic: "Predict trends using graphs", goal: "Forecast socioeconomic vectors using function slopes.", sdg: "SDG 8: Decent Work & Economic Growth", problem: "Unstable long-range tracking invites unexpected liquidity shocks.", activity: "Macro trend regressions and business models.", task: "<b>Observe:</b> Collate localized market consumer demand indicators over time.<br><b>Analyze:</b> Estimate system growth constants based on slope metrics.<br><b>Act:</b> Author a comprehensive financial growth prediction chart.", output: "Graph report", reflection: "Why predict trends?" }
+                ],
+                "Grade 9": [
+                    { q: "Trigonometry", topic: "Apply measurement in construction", goal: "Utilate trigonometric ratio parameters to secure structures.", sdg: "SDG 11: Sustainable Cities & Communities", problem: "Flawed structural slope calculations trigger wall collapse errors.", activity: "Trigonometric elevation mapping and scale challenges.", task: "<b>Observe:</b> Gauge physical angles of local retaining structures.<br><b>Analyze:</b> Test load vectors relative to angle variants.<br><b>Act:</b> Draft an optimized structural blueprint showing elevation math.", output: "Building sketch", reflection: "How does math build cities?" }
+                ],
+                "Grade 10": [
+                    { q: "Climate Modeling", topic: "Analyze environmental data", goal: "Apply statistical modeling concepts to climate numbers.", sdg: "SDG 13: Climate Action", problem: "Unmodeled environmental decay leaves cities defenseless to climate anomalies.", activity: "Historical macro temperature variance tracking datasets.", task: "<b>Observe:</b> Pull down decadal weather tracking numbers from archives.<br><b>Think:</b> Model extreme global temperature progression tracks.<br><b>Act:</b> Formulate an objective data-backed climate mitigation proposal.", output: "Climate report", reflection: "How can math help Earth?" }
+                ]
+            },
+            filipino: {
+                "Grade 1": [
+                    { q: "Q1", topic: "Pagpapakilala sa Sarili at Pamilya", goal: "Maipakilala ang sarili at pamilya gamit ang payak na salita.", sdg: "SDG 4: Quality Education", problem: "Kakulangan sa self-expression ng bata.", activity: "Show-and-tell ng pamilya.", task: "<b>Notice:</b> Ilarawan ang pamilya.<br><b>Think:</b> Bakit mahalaga ang pamilya.<br><b>Act:</b> Gumuhit at magbahagi sa klase.", output: "Family drawing", reflection: "Bakit mahalagang kilalanin ang pamilya?" },
+                    { q: "Q2", topic: "Pakikinig at Pagsunod sa Panuto", goal: "Makasunod sa simpleng panuto.", sdg: "SDG 16: Peace, Justice & Strong Institutions", problem: "Hindi pagkakaintindihan sa klase.", activity: "Listening games.", task: "<b>Notice:</b> Panuto sa paligid.<br><b>Think:</b> Epekto ng hindi pagsunod.<br><b>Act:</b> Sundin classroom instructions.", output: "Role play output", reflection: "Bakit mahalaga ang pakikinig?" },
+                    { q: "Q3", topic: "Paglalarawan ng Tao, Hayop, Bagay", goal: "Makapaglarawan gamit ang payak na salita.", sdg: "SDG 10: Reduced Inequalities", problem: "Hindi paggalang sa pagkakaiba.", activity: "Picture description.", task: "<b>Notice:</b> Pagkakaiba.<br><b>Think:</b> Paggalang.<br><b>Act:</b> Gumawa ng description chart.", output: "Vocabulary chart", reflection: "Paano natin igagalang ang iba?" },
+                    { q: "Q4", topic: "Pagkukuwento", goal: "Makapagpahayag ng simpleng kuwento.", sdg: "SDG 4: Quality Education", problem: "Kakulangan sa storytelling skills.", activity: "Story sequencing.", task: "<b>Notice:</b> Kuwento.<br><b>Think:</b> Aral.<br><b>Act:</b> Ikuwento muli sa pamilya.", output: "Story retelling", reflection: "Ano ang natutunan sa kuwento?" }
+                ],
+                "Grade 2": [
+                    { q: "Q1", topic: "Ako at Pamayanan", goal: "Maipaliwanag ang sarili sa komunidad.", sdg: "SDG 11: Sustainable Cities & Communities", problem: "Kakulangan sa community awareness.", activity: "Community mapping.", task: "<b>Notice:</b> Lugar sa paligid.<br><b>Think:</b> Papel sa komunidad.<br><b>Act:</b> Gumawa ng mapa.", output: "Community map", reflection: "Paano mapapabuti ang komunidad?" },
+                    { q: "Q2", topic: "Mga Katulong sa Pamayanan", goal: "Makilala ang tungkulin ng mga manggagawa.", sdg: "SDG 8: Decent Work & Economic Growth", problem: "Hindi pagpapahalaga sa workers.", activity: "Role play.", task: "<b>Notice:</b> Trabaho.<br><b>Think:</b> Kahalagahan.<br><b>Act:</b> Thank-you card.", output: "Career poster", reflection: "Bakit mahalaga ang manggagawa?" },
+                    { q: "Q3", topic: "Pagmamahal sa Kalikasan", goal: "Maipakita ang pangangalaga sa kalikasan.", sdg: "SDG 15: Life on Land", problem: "Polusyon at basura.", activity: "Nature walk.", task: "<b>Notice:</b> Kalikasan.<br><b>Think:</b> Epekto ng basura.<br><b>Act:</b> Recycling activity.", output: "Eco craft", reflection: "Bakit dapat alagaan ang kalikasan?" },
+                    { q: "Q4", topic: "Tula at Awit", goal: "Maipahayag ang damdamin sa tula at awit.", sdg: "SDG 3: Good Health and Well-Being", problem: "Hindi malayang pagpapahayag ng emosyon.", activity: "Poetry recital.", task: "<b>Notice:</b> Damdamin.<br><b>Think:</b> Emosyon.<br><b>Act:</b> Bumuo ng tula.", output: "Spoken poem", reflection: "Paano nakatutulong ang tula?" }
+                ],
+                "Grade 3": [
+                    { q: "Q1", topic: "Kuwentong Bayan at Alamat", goal: "Maunawaan ang kulturang Pilipino.", sdg: "SDG 11: Sustainable Cities & Communities", problem: "Pagkalimot sa tradisyon.", activity: "Story dramatization.", task: "<b>Notice:</b> Kuwento.<br><b>Think:</b> Aral.<br><b>Act:</b> Role play.", output: "Cultural performance", reflection: "Bakit mahalaga ang kultura?" },
+                    { q: "Q2", topic: "Pagbibigay Panuto", goal: "Makasunod at makagawa ng malinaw na panuto.", sdg: "SDG 4: Quality Education", problem: "Mali-maling komunikasyon.", activity: "Instruction writing.", task: "<b>Notice:</b> Steps.<br><b>Think:</b> Kahalagahan.<br><b>Act:</b> Gumawa ng instructions.", output: "Instruction sheet", reflection: "Bakit mahalaga ang malinaw na panuto?" },
+                    { q: "Q3", topic: "Pagiging Pilipino", goal: "Maipakita ang pagmamahal sa bayan.", sdg: "SDG 16: Peace, Justice & Strong Institutions", problem: "Kakulangan sa national identity.", activity: "Poster making.", task: "<b>Notice:</b> Bayan.<br><b>Think:</b> Pagkakaisa.<br><b>Act:</b> Slogan creation.", output: "Advocacy poster", reflection: "Ano ang pagiging Pilipino?" },
+                    { q: "Q4", topic: "Malikhaing Pagsulat", goal: "Makapagpahayag ng damdamin sa pagsulat.", sdg: "SDG 10: Reduced Inequalities", problem: "Hindi naririnig ang boses ng bata.", activity: "Story writing.", task: "<b>Notice:</b> Damdamin.<br><b>Think:</b> Boses ng bata.<br><b>Act:</b> Sumulat ng kuwento.", output: "Short story", reflection: "Paano nakatutulong ang pagsulat?" }
+                ],
+                "Grade 4": [
+                    { q: "Q1", topic: "Kuwento at Sanaysay", goal: "Maunawaan ang binasang teksto.", sdg: "SDG 4: Quality Education", problem: "Mababang reading comprehension.", activity: "Reading circles.", task: "<b>Notice:</b> Teksto.<br><b>Think:</b> Mensahe.<br><b>Act:</b> Buod.", output: "Story summary", reflection: "Bakit mahalaga ang pagbabasa?" },
+                    { q: "Q2", topic: "Liham", goal: "Makapagsulat ng liham.", sdg: "SDG 16: Peace, Justice & Strong Institutions", problem: "Mahinang komunikasyon.", activity: "Letter writing.", task: "<b>Notice:</b> Sitwasyon.<br><b>Think:</b> Tono.<br><b>Act:</b> Sumulat ng liham.", output: "Sample letters", reflection: "Paano nakakatulong ang liham?" },
+                    { q: "Q3", topic: "Kulturang Pilipino", goal: "Mapahalagahan ang tradisyon.", sdg: "SDG 11: Sustainable Cities & Communities", problem: "Pagkalimot sa kultura.", activity: "Interview elders.", task: "<b>Notice:</b> Kultura.<br><b>Think:</b> Kahalagahan.<br><b>Act:</b> Cultural poster.", output: "Heritage poster", reflection: "Bakit mahalaga ang kultura?" },
+                    { q: "Q4", topic: "Midya at Biswal", goal: "Maging mapanuri sa media.", sdg: "SDG 9: Industry, Innovation & Infrastructure", problem: "Fake news.", activity: "Media analysis.", task: "<b>Notice:</b> Content.<br><b>Think:</b> Totoo o hindi.<br><b>Act:</b> Infographic.", output: "Media poster", reflection: "Paano maging mapanuri?" }
+                ],
+                "Grade 5": [
+                    { q: "Q1", topic: "Pagbasa ng Panitikan", goal: "Maunawaan ang panitikan.", sdg: "SDG 4: Quality Education", problem: "Kulang sa reading comprehension.", activity: "Book review.", task: "<b>Notice:</b> Kuwento.<br><b>Think:</b> Aral.<br><b>Act:</b> Reading journal.", output: "Reading log", reflection: "Ano ang natutunan sa panitikan?" },
+                    { q: "Q2", topic: "Panghihikayat", goal: "Makasulat ng tekstong panghihikayat.", sdg: "SDG 13: Climate Action", problem: "Kakulangan sa environmental awareness.", activity: "Advocacy writing.", task: "<b>Notice:</b> Kalikasan.<br><b>Think:</b> Problema.<br><b>Act:</b> Campaign letter.", output: "Advocacy letter", reflection: "Paano makahihikayat ang pagsulat?" },
+                    { q: "Q3", topic: "Midya at Teknolohiya", goal: "Gumamit ng media nang responsable.", sdg: "SDG 9: Industry, Innovation & Infrastructure", problem: "Maling paggamit ng social media.", activity: "Digital poster.", task: "<b>Notice:</b> Online content.<br><b>Think:</b> Responsibilidad.<br><b>Act:</b> Campaign poster.", output: "Digital output", reflection: "Paano maging responsible online?" },
+                    { q: "Q4", topic: "Pananaliksik", goal: "Makapagsagawa ng simpleng pananaliksik.", sdg: "SDG 4: Quality Education", problem: "Kakulangan sa impormasyon literacy.", activity: "Interview activity.", task: "<b>Notice:</b> Isyu.<br><b>Think:</b> Datos.<br><b>Act:</b> Research report.", output: "Research output", reflection: "Bakit mahalaga ang pananaliksik?" }
+                ],
+                "Grade 6": [
+                    { q: "G6, Q1", topic: "Sanaysay", goal: "Makapagsulat ng malinaw na sanaysay.", sdg: "SDG 4: Quality Education", problem: "Mahinang pagpapahayag.", activity: "Essay writing.", task: "Notice experiences; Think ideas; Act write essay.", output: "Essay", reflection: "Paano nakatutulong ang pagsulat?" },
+                    { q: "G6, Q2", topic: "Pangangatwiran", goal: "Makipagdebate nang maayos.", sdg: "SDG 16: Peace, Justice & Strong Institutions", problem: "Hindi maayos na diskusyon.", activity: "Debate.", task: "Notice issues; Think sides; Act defend opinion.", output: "Position paper", reflection: "Bakit mahalaga ang respeto sa opinyon?" },
+                    { q: "G6, Q3", topic: "Kritikal na Pagbasa", goal: "Maging mapanuri sa teksto.", sdg: "SDG 10: Reduced Inequalities", problem: "Fake news at misinformation.", activity: "Article analysis.", task: "Notice texts; Think truth; Act fact-check.", output: "Analysis report", reflection: "Bakit mahalaga ang pagiging mapanuri?" },
+                    { q: "G6, Q4", topic: "Panitikang Pilipino", goal: "Maunawaan ang kulturang Pilipino.", sdg: "SDG 11: Sustainable Cities & Communities", problem: "Pagkalimot sa kultura.", activity: "Storytelling.", task: "Notice traditions; Think meaning; Act cultural blog.", output: "Cultural blog", reflection: "Paano pinapahalagahan ang kultura?" },
+                    { q: "G7-G10", topic: "Various Filipino Competencies", goal: "Advanced communication & literacy skills.", sdg: "Mixed SDGs (4, 9, 10, 11, 13, 16)", problem: "Real-world communication issues.", activity: "Debate, media, writing, research.", task: "Notice-Think-Act applied per topic.", output: "Essays, media outputs, projects", reflection: "How does language shape society?" }
+                ]
+            }
         };
 
-        // DOM Elements
-        const gradeSelect = document.getElementById('gradeLevel');
-        const subjectSelect = document.getElementById('subject');
-        const topicInput = document.getElementById('topicInput');
-        const suggestionsBox = document.getElementById('suggestionsBox');
-        const generateBtn = document.getElementById('generateBtn');
-        
-        const placeholderView = document.getElementById('placeholderView');
-        const lessonTemplate = document.getElementById('lessonTemplate');
-
-        // Output fields
-        const outGrade = document.getElementById('outGrade');
-        const outSubject = document.getElementById('outSubject');
-        const outTopic = document.getElementById('outTopic');
-        const sdgBadge = document.getElementById('sdgBadge');
-        const outGoal = document.getElementById('outGoal');
-        const outConnection = document.getElementById('outConnection');
-        const outProblem = document.getElementById('outProblem');
-        const outActivity = document.getElementById('outActivity');
-        const outNotice = document.getElementById('outNotice');
-        const outThink = document.getElementById('outThink');
-        const outAct = document.getElementById('outAct');
-        const outOutput = document.getElementById('outOutput');
-        const outReflection = document.getElementById('outReflection');
-
-        const editBtn = document.getElementById('editBtn');
-        const printBtn = document.getElementById('printBtn');
-
-        let isEditing = false;
-
-        // Auto-suggestions Engine based on dataset keywords
-        topicInput.addEventListener('input', () => {
-            const val = topicInput.value.toLowerCase().trim();
-            const selectedGrade = gradeSelect.value;
-            const selectedSubj = subjectSelect.value;
+        // Populate dynamic grade levels based on selected subject options
+        function populateGrades() {
+            const subject = document.getElementById('subjectSelect').value;
+            const gradeSelect = document.getElementById('gradeSelect');
             
-            suggestionsBox.innerHTML = '';
-            if(!val) { suggestionsBox.style.display = 'none'; return; }
-
-            // Filter context matches
-            const filtered = curriculumDataset.filter(item => {
-                const matchText = item.topic.toLowerCase();
-                const gradeMatch = !selectedGrade || item.grade === selectedGrade;
-                const subjMatch = !selectedSubj || item.subject === selectedSubj;
-                return matchText.includes(val) && gradeMatch && subjMatch;
+            // Clear current selection lists
+            gradeSelect.innerHTML = '';
+            
+            // Fetch grades found under selected subject category keys
+            const availableGrades = Object.keys(fullCurriculumMatrixDB[subject]);
+            
+            availableGrades.forEach(grade => {
+                const option = document.createElement('option');
+                option.value = grade;
+                option.textContent = grade;
+                gradeSelect.appendChild(option);
             });
+            
+            // Force interface rendering automatically
+            renderMatrixData();
+        }
 
-            if(filtered.length > 0) {
-                filtered.forEach(item => {
-                    const div = document.createElement('div');
-                    div.className = 'suggestion-item';
-                    div.innerHTML = `<strong>[${item.subject}-${item.grade}]</strong> ${item.topic}`;
-                    div.addEventListener('click', () => {
-                        topicInput.value = item.topic;
-                        gradeSelect.value = item.grade;
-                        subjectSelect.value = item.subject;
-                        suggestionsBox.style.display = 'none';
-                    });
-                    suggestionsBox.appendChild(div);
-                });
-                suggestionsBox.style.display = 'block';
-            } else {
-                suggestionsBox.style.display = 'none';
-            }
-        });
-
-        // Hide suggestions on outside click
-        document.addEventListener('click', (e) => {
-            if(e.target !== topicInput) suggestionsBox.style.display = 'none';
-        });
-
-        // Heuristic AI Matching and Intelligent Structuring Core Logic
-        generateBtn.addEventListener('click', () => {
-            const grade = gradeSelect.value;
-            const subject = subjectSelect.value;
-            const inputTopic = topicInput.value.trim();
-
-            if(!grade || !subject || !inputTopic) {
-                alert("Please fill in Grade Level, Subject, and Topic parameters to execute structural generation.");
+        // Output matrix item lines directly inside HTML grid space rows
+        function renderMatrixData() {
+            const subject = document.getElementById('subjectSelect').value;
+            const grade = document.getElementById('gradeSelect').value;
+            const tbody = document.getElementById('matrixGridBody');
+            const badgeContainer = document.getElementById('badgeContainer');
+            
+            tbody.innerHTML = ''; 
+            
+            const datasets = fullCurriculumMatrixDB[subject][grade] || [];
+            
+            // Display counter counts values badges
+            badgeContainer.innerHTML = `<span class="bg-indigo-100 text-indigo-800 font-bold text-xs px-2.5 py-1 rounded-md border border-indigo-200">${datasets.length} Integrations Mapped</span>`;
+            
+            if(datasets.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center font-medium text-gray-400 italic">No entry targets mapped inside this configuration framework profile.</td></tr>`;
                 return;
             }
-
-            // 1. Structural Search Strategy: Exact Matrix Match
-            let match = curriculumDataset.find(item => 
-                item.grade.toLowerCase() === grade.toLowerCase() &&
-                item.subject.toLowerCase() === subject.toLowerCase() &&
-                item.topic.toLowerCase() === inputTopic.toLowerCase()
-            );
-
-            // 2. Keyword Proximity Match across specific subject
-            if(!match) {
-                const subjectPool = curriculumDataset.filter(item => item.subject.toLowerCase() === subject.toLowerCase());
-                let bestScore = 0;
-                subjectPool.forEach(item => {
-                    const words = inputTopic.toLowerCase().split(/\s+/);
-                    let score = 0;
-                    words.forEach(w => { if(item.topic.toLowerCase().includes(w)) score++; });
-                    if(score > bestScore) { bestScore = score; match = item; }
-                });
-            }
-
-            // 3. Fallback Synthesizer: Adaptive Generative Engine Logic
-            if(!match) {
-                match = synthesizeDynamicFallback(grade, subject, inputTopic);
-            }
-
-            renderLessonPlan(grade, subject, inputTopic, match);
-        });
-
-        // Fallback Generator to guarantee intelligent dynamic lesson mapping
-        function synthesizeDynamicFallback(grade, subject, topic) {
-            // General heuristics base
-            let selectedSDG = "SDG 12: Responsible Consumption and Production";
-            let goal = `Analyze structural components of ${topic} to evaluate localized optimization paths.`;
-            let problem = `Inefficient management patterns regarding ${topic} create structural challenges in the immediate community.`;
-            let activity = `Collaborative simulation research and local impact mapping of ${topic}.`;
-            let notice = `Observe immediate environmental indicators related to ${topic}.`;
-            let think = `Evaluate how optimization of ${topic} influences regional sustainability metrics.`;
-            let act = `Formulate a actionable 1-week community-wide systemic optimization directive.`;
-            let output = `Strategic localized development blueprint or functional analytical essay`;
-            let reflection = `In what manner does the individual stewardship of ${topic} advance nation-building outcomes?`;
-
-            // Subject-guided overrides
-            if(subject === "Science") {
-                selectedSDG = "SDG 13: Climate Action";
-                if(topic.toLowerCase().includes("water") || topic.toLowerCase().includes("liquid")) selectedSDG = "SDG 6: Clean Water and Sanitation";
-                if(topic.toLowerCase().includes("life") || topic.toLowerCase().includes("plant") || topic.toLowerCase().includes("animal")) selectedSDG = "SDG 15: Life on Land";
-                if(topic.toLowerCase().includes("health") || topic.toLowerCase().includes("body") || topic.toLowerCase().includes("cell")) selectedSDG = "SDG 3: Good Health and Well-Being";
-                if(topic.toLowerCase().includes("energy") || topic.toLowerCase().includes("electricity") || topic.toLowerCase().includes("power")) selectedSDG = "SDG 7: Affordable and Clean Energy";
-            } else if(subject === "Math") {
-                selectedSDG = "SDG 4: Quality Education";
-                if(topic.toLowerCase().includes("money") || topic.toLowerCase().includes("budget") || topic.toLowerCase().includes("percent")) selectedSDG = "SDG 1: No Poverty";
-                if(topic.toLowerCase().includes("graph") || topic.toLowerCase().includes("stat") || topic.toLowerCase().includes("data")) selectedSDG = "SDG 3: Good Health and Well-Being";
-                if(topic.toLowerCase().includes("share") || topic.toLowerCase().includes("fraction") || topic.toLowerCase().includes("ratio")) selectedSDG = "SDG 2: Zero Hunger";
-            } else if(subject === "English" || subject === "Filipino") {
-                selectedSDG = "SDG 16: Peace, Justice, and Strong Institutions";
-                if(topic.toLowerCase().includes("culture") || topic.toLowerCase().includes("tradition") || topic.toLowerCase().includes("bayan")) selectedSDG = "SDG 11: Sustainable Cities and Communities";
-                if(topic.toLowerCase().includes("differ") || topic.toLowerCase().includes("equal") || topic.toLowerCase().includes("pagsulat")) selectedSDG = "SDG 10: Reduced Inequalities";
-            }
-
-            return { grade, subject, topic, goal, sdg: selectedSDG, problem, activity, notice, think, act, output, reflection };
-        }
-
-        // Render populated template view
-        function renderLessonPlan(grade, subject, topic, data) {
-            placeholderView.style.display = 'none';
-            lessonTemplate.style.display = 'block';
-
-            outGrade.textContent = grade;
-            outSubject.textContent = subject;
-            outTopic.textContent = topic;
-
-            // Set SDG Badge features dynamically
-            sdgBadge.textContent = data.sdg;
-            let badgeColor = "#6c757d"; // default gray
-            for (const key in sdgColors) {
-                if(data.sdg.startsWith(key)) { badgeColor = sdgColors[key]; break; }
-            }
-            sdgBadge.style.backgroundColor = badgeColor;
-
-            // Load texts
-            outGoal.textContent = data.goal;
-            outConnection.textContent = `Aligned directly with the principles of ${data.sdg}. This unit bridges conceptual knowledge with systemic, macro-level real-world stewardship mandates.`;
-            outProblem.textContent = data.problem;
-            outActivity.textContent = data.activity;
-            outNotice.textContent = data.notice;
-            outThink.textContent = data.think;
-            outAct.textContent = data.act;
-            outOutput.textContent = data.output;
-            outReflection.textContent = data.reflection;
-
-            // Reset editing state explicitly
-            isEditing = false;
-            editBtn.textContent = "✍️ Edit Document";
-            toggleEditable(false);
-        }
-
-        // Handle text editing toggle mechanisms
-        editBtn.addEventListener('click', () => {
-            isEditing = !isEditing;
-            if(isEditing) {
-                editBtn.textContent = "💾 Save Content Modifications";
-                toggleEditable(true);
-            } else {
-                editBtn.textContent = "✍️ Edit Document";
-                toggleEditable(false);
-                alert("Modifications synchronized internally within active layout view.");
-            }
-        });
-
-        function toggleEditable(state) {
-            const fields = document.querySelectorAll('.editable-field');
-            fields.forEach(f => {
-                f.setAttribute('contenteditable', state ? "true" : "false");
-            });
-        }
-
-        // Print/Download functionality via browser layer invocation
-        printBtn.addEventListener('click', () => {
-            window.print();
-        });
-    </script>
-
-    <style media="print">
-        /* Optimization Layer for Local Native PDF Exports */
-        body { background: #fff; color: #000; }
-        header, .planner-form, footer, .actions-wrapper { display: none !important; }
-        .container { display: block; margin: 0; padding: 0; }
-        .card { box-shadow: none !important; border: none !important; padding: 0 !important; }
-        .lesson-template { display: block !important; }
-        .section-block { page-break-inside: avoid; border: 1px solid #ccc !important; }
-    </style>
-</body>
-</html>
+            
+            datasets.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-indigo-50/30 transition-colors duration-150 align-top";
+                
+                tr.innerHTML = `
+                    <td class="p-4 font-black text-indigo-600 border-r border-gray-100 text-center bg-gray-50/50">${row.q}</td>
+                    <td class="p-4">
+                        <div class="font-bold text-gray-900 leading-tight">${row.topic}</div>
+                        <div class="text-xs text-gray-500 mt-1.5 font-medium bg-gray-100 p-2 rounded-md border border-gray-200/60">${row.goal}</div>
+                    </td>
+                    <td class="p-4">
+                        <span class="inline-block bg-emerald-50 text-emerald-800 text-xs px-2.5 py-1.5 rounded-lg font-bold border border-emerald-200 shadow-3xs">${row.sdg}</span>
+                    </td>
+                    <td class="p-4 text-xs">
+                        <div class="text-red-700 font-semibold mb-1">⚠️ Problem:</div>
+                        <div class="text-gray-600 mb-3">${row.problem}</div>
+                        <div class="text-indigo-900 font-semibold mb-1">⚙️ Activity:</div>
+                        <div class="text-gray-600 bg-indigo-50/40 p-2 rounded border border-indigo-100">${row.activity}</div>
+                    </td>
+                    <td class="p-4 text-xs text-gray-700 leading-relaxed font-medium tracking-wide bg-slate-50/40 border-x border-gray-100">${row.task}</td>
+                    <td class="p-4">
+                        <div class="text-xs font-bold text-gray-900 bg-amber-50 border border-amber-200 text-amber-900 p-2 rounded-md">📦 Output:<br><span class="font-medium text-gray-700">${row.output}</span></div>
+                        <div class="text-xs
